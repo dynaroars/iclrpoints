@@ -1,0 +1,57 @@
+<!DOCTYPE html> <!-- This is an HTML5 page -->
+<html lang="en"> <!-- this page is in English-->
+<head> <!-- <head> is where you put page setting title scripts -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICLR Points</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> <!-- loads Plotly from internet. Plotly is chart library-->
+</head>
+<body> <!-- content user will see -->
+    <h2>ICLR Points</h2>
+    <p>How many ICLR publications is one paper in each area?</p>
+
+    <div id="chart"></div> <!-- where the chart will be -->
+
+    <script> // Where JavaScript will be ran
+        //Step 1: Load data from file
+        fetch("iclr_points.json")
+            //Convert file to a JS object
+            .then(function(response){
+                return response.json(); // calling json on response -> parse json text into JS data
+            })
+            //Data ready for usage
+            .then(function(data){ //parameter (data) receive converted data
+                //List of areas and it's value
+                var areas = [];
+                var values = [];
+                
+                for(var i = data.length - 1; i >= 0; i--){
+                    var row = data[i];
+
+                    areas.push(row.area);
+                    values.push(row.iclr_points);
+                }
+                var trace = {
+                    type: "bar",
+                    x: values,
+                    y: areas,
+                    orientation: "h",
+                    marker: {color: "#1f77b4"},
+                    hovertemplate: "<b>%{y}</b><br>ICLR Points: %{x:.2f}<extra></extra>"
+                };
+                var layout = {
+                    margin: { l: 200, r: 30, t:30, b:30},
+                    xaxis: { title: "ICLR Points"},
+                    yaxis: { title: "Areas"},
+                    showlegend: false,
+                    height: 400 + data.length * 10
+                };
+                Plotly.newPlot("chart", [trace], layout, { displaylogo: false})
+            })
+            .catch(function(error){
+                document.getElementById("chart").innerText = "Failed to load data.";
+                console.error("Error:", error);
+            }) 
+    </script>
+</body>
+</html>
