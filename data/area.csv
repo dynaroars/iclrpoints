@@ -16,7 +16,6 @@ AI,The Web & information retrieval,inforet,WWW
 Systems,Computer architecture,arch,ASPLOS
 Systems,Computer architecture,arch,ISCA
 Systems,Computer architecture,arch,MICRO
-Systems,Computer architecture,arch,HPCA
 Systems,Computer networks,comm,SIGCOMM
 Systems,Computer networks,comm,NSDI
 Systems,Computer networks,comm,INFOCOM
@@ -25,7 +24,6 @@ Systems,Computer security,sec,IEEE S&P
 Systems,Computer security,sec,USENIX Security
 Systems,Computer security,sec,NDSS
 Systems,Databases,mod,PODS
-
 Systems,Databases,mod,SIGMOD
 Systems,Databases,mod,VLDB
 Systems,Design automation,da,DAC

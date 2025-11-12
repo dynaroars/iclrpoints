@@ -2,7 +2,7 @@ import gzip # For reading compressed dblp xml (.gz)
 import xml.etree.ElementTree as ET # For parsing xml efficiently
 
 # Paths
-CSRANKINGS_PATH = "data/csrankings.csv"
+CSRANKINGS_PATH = "data/csrankings_march.csv"
 AREA_PATH = "data/area.csv"
 DBLP_PATH = "data/dblp.xml.gz"
 OUTPUT_PATH = "data/iclr_points.csv"
@@ -13,6 +13,7 @@ def load_faculty_names(csrankings_path):
     We only need the names so we can match DBLP authors to 'known' faculty.
     """
     faculty_set = set()
+    count = 0
     with open(csrankings_path, "r") as f:
         next(f)  # skip header
         for line in f:
@@ -22,6 +23,8 @@ def load_faculty_names(csrankings_path):
                 continue
             name = parts[0]
             faculty_set.add(name)
+            count += 1
+    print("Total number of faculties: ", count)
     return faculty_set
 
 
