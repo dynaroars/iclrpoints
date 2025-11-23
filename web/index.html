@@ -7,36 +7,85 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> <!-- loads Plotly from internet. Plotly is chart library-->
 </head>
 <body> <!-- content user will see -->
+    <div id="menu"></div>
+
     <h2>ICLR Points</h2>
     <p>How many ICLR publications is one paper in each area?</p>
 
-    <div id="chart"></div> <!-- where the chart will be -->
+    <div id="layout">
+        <div id="chart"></div> <!-- chart -->
+        <div id="sidebar">
+            <div id="date-range">
+                <p>From: <input type="text" id="from-year" placeholder="2019"></p>
+                <p>To: <input type="text" id="to-year" placeholder="2023"></p>
+            </div>
+            <div id="checkboxes">
+                <p>
+                    <input type="checkbox" id="cb-ai" value="AI" checked>
+                    <label for="cb-ai">AI</label>
+                </p>
+                <p>
+                    <input type="checkbox" id="cb-systems" value="Systems" checked>
+                    <label for="cb-systems">Systems</label>
+                </p>
+                <p>
+                    <input type="checkbox" id="cb-theory" value="Theory" checked>
+                    <label for="cb-theory">Theory</label>
+                </p>
+                <p>
+                    <input type="checkbox" id="cb-inter" value="Interdisciplinary Areas" checked>
+                    <label for="cb-inter">Interdisciplinary Areas</label>
+                </p>
+            </div>
+        </div>
+    </div>
 
     <script> // Where JavaScript will be ran
         //Step 1: Load data from file
         fetch("iclr_points.json")
             //Convert file to a JS object
-            .then(function(response){
-                return response.json(); // calling json on response -> parse json text into JS data
-            })
-            //Data ready for usage
-            .then(function(data){ //parameter (data) receive converted data
-                //List of areas and it's value
+            .then(function(response){ return response.json(); })
+            .then(function(data){
+
+                var parentOrder = ["AI", "Systems", "Theory", "Interdisciplinary Areas"];
+                
+                data.sort(function(a,b){
+                    var pa = parentOrder.indexOf(a.parent_area);
+                    var pb = parentOrder.indexOf(b.parent_area);
+
+                    if(pa !== pb){
+                        return pa - pb;
+                    }
+                    // return b.iclr_points - a.iclr_points;
+                })
+
                 var areas = [];
                 var values = [];
+                var parents = [];
                 
                 for(var i = data.length - 1; i >= 0; i--){
                     var row = data[i];
 
                     areas.push(row.area);
                     values.push(row.iclr_points);
+                    parents.push(row.parent_area);
                 }
+                var colorMap = {
+                    "AI": "#1f77b4",
+                    "Systems": "#ff7f0e",
+                    "Theory": "#2ca02c",
+                    "Interdisciplinary Areas": "#d62728"
+                };
+                var barColors = parents.map(function(p){
+                    return colorMap[p];
+                });
+
                 var trace = {
                     type: "bar",
                     x: values,
                     y: areas,
                     orientation: "h",
-                    marker: {color: "#1f77b4"},
+                    marker: { color: barColors },
                     hovertemplate: "<b>%{y}</b><br>ICLR Points: %{x:.2f}<extra></extra>"
                 };
                 var layout = {
