@@ -2,6 +2,18 @@
 
 Compare research areas by ICLR points (faculty-per-publication ratio normalized to Machine Learning).
 
+## Architecture
+Startup:
+  Parse DBLP once
+  Cache per-year data
+
+Page load:
+  Fetch all ICLR data once
+
+Interaction:
+  Filter JS array
+  Update Plotly chart
+
 ## Setup
 1. Install dependencies  
    `pip install -r requirements.txt`
