@@ -95,32 +95,55 @@ function updateChart(fromYear, toYear) {
     };
     
     var colorMap = {
-        "AI": "#1f77b4",
-        "Systems": "#ff7f0e",
-        "Theory": "#2ca02c",
-        "Interdisciplinary Areas": "#d62728"
+        "AI": { fill: "rgba(31, 119, 180, 0.3)", line: "rgba(31, 119, 180, 1)" },
+        "Systems": { fill: "rgba(255, 127, 14, 0.3)", line: "rgba(255, 127, 14, 1)" },
+        "Theory": { fill: "rgba(44, 160, 44, 0.3)", line: "rgba(44, 160, 44, 1)" },
+        "Interdisciplinary Areas": { fill: "rgba(148, 103, 189, 0.3)", line: "rgba(148, 103, 189, 1)" }
     };
-    var barColors = parents.map(function(p){
-        return colorMap[p] || "#999";
-    });
+    var defaultColor = { fill: "rgba(150, 150, 150, 0.3)", line: "rgba(150, 150, 150, 1)" };
+    var barColors = parents.map(function(p){ return (colorMap[p] || defaultColor).fill; });
+    var lineColors = parents.map(function(p){ return (colorMap[p] || defaultColor).line; });
 
     var trace = {
         type: "bar",
         x: values,
         y: areas,
         orientation: "h",
-        marker: {color: barColors},
+        marker: {
+            color: barColors,
+            line: { color: lineColors, width: 1.5 }
+        },
         text: values.map(function(v) { return v.toFixed(2); }),
-        textposition: 'outside'
+        textposition: 'inside',
+        insidetextanchor: 'start',
+        textfont: { color: '#333', size: 15 }
     };
 
     var layout = {
-        margin: { l: 230, r: 50, t: 20, b: 30 },
-        xaxis: { title: "ICLR point" },
-        yaxis: { automargin: true, title: "Area" },
+        height: 700,
+        margin: { l: 250, r: 250, t: 10, b: 15 },
+        bargap: 0.17,
+
+        xaxis: {
+          range: [-0.1, 6],
+          autorange: false,
+          fixedrange: true,
+          showgrid: true,
+          gridcolor: "rgba(0,0,0,0.08)",
+        },
+      
+        yaxis: {
+          fixedrange: true,
+          tickfont: { size: 12 },
+          automargin: false,
+          showgrid: true
+        },
+      
         showlegend: false,
-        height: 400 + filteredData.length * 10
-    };
+        paper_bgcolor: "white",
+        plot_bgcolor: "white",
+      };
+      
 
     if (document.getElementById("chart").data) {
         Plotly.react("chart", [trace], layout, { displaylogo: false });
