@@ -163,7 +163,7 @@ function getYearsFromInput() {
 function setup(){
     populateYearDropdowns();
 
-    fetch("http://localhost:8001/iclr_points_all")
+    fetch("data.json")
         .then(function(response){
             return response.json();
         })
