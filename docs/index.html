@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICLR Points</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>ICLR Points: How Many ICLR Publications Is One Paper in Each Area?</h1>
+    
+    <div class="intro-text">
+        <p>It is well known that in different computer science areas, it takes different levels of effort to publish one paper. In this webpage, I try to measure the amount of effort to publish one top-tier paper in each area, in the unit of ICLR points, the amount of effort to publish one paper in top ML conferences such as ICLR.</p>
+        <p>The data is found through <a href="https://csrankings.org" target="_blank">CSRankings</a>. The methodology and FAQ can be read <a href="#" target="_blank">here</a>.</p>
+    </div>
+
+    <div id="layout">
+        <div id="sidebar">
+            <div id="date-range">
+                <label>From Date:</label>
+                <select id="from-year"></select>
+                
+                <label>To Date:</label>
+                <select id="to-year"></select>
+            </div>
+
+            <div id="checkboxes">
+                <input type="checkbox" checked> AI
+
+                <div>
+                    <input type="checkbox" checked> Artificial intelligence
+                    <div><input type="checkbox"> AAAI</div>
+                    <div><input type="checkbox" checked> IJCAI</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Computer vision
+                    <div><input type="checkbox" checked> CVPR</div>
+                    <div><input type="checkbox" checked> ECCV</div>
+                    <div><input type="checkbox" checked> ICCV</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Machine learning
+                    <div><input type="checkbox" checked> ICLR</div>
+                    <div><input type="checkbox" checked> ICML</div>
+                    <div><input type="checkbox" checked> NIPS</div>
+                </div>
+
+                <div><input type="checkbox"> KDD</div>
+
+                <div>
+                    <input type="checkbox" checked> Natural language processing
+                    <div><input type="checkbox" checked> ACL</div>
+                    <div><input type="checkbox" checked> EMNLP</div>
+                    <div><input type="checkbox" checked> NAACL</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> The Web & information retrieval
+                    <div><input type="checkbox" checked> SIGIR</div>
+                    <div><input type="checkbox" checked> WWW</div>
+                </div>
+                
+                <input type="checkbox" checked> Systems
+
+                <div>
+                    <input type="checkbox" checked> Computer architecture
+                    <div><input type="checkbox" checked> ASPLOS</div>
+                    <div><input type="checkbox" checked> ISCA</div>
+                    <div><input type="checkbox" checked> MICRO</div>
+                    <div><input type="checkbox"> HPCA</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Computer networks
+                    <div><input type="checkbox"> SIGCOMM</div>
+                    <div><input type="checkbox" checked> NSDI</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Computer security
+                    <div><input type="checkbox" checked> CCS</div>
+                    <div><input type="checkbox" checked> IEEE S&P</div>
+                    <div><input type="checkbox" checked> USENIX Security</div>
+                    <div><input type="checkbox" checked> NDSS</div>
+                </div>
+                
+                <div>
+                    <input type="checkbox" checked> Databases
+                    <div><input type="checkbox" checked> SIGMOD</div>
+                    <div><input type="checkbox" checked> VLDB</div>
+                    <div><input type="checkbox" checked> ICDE</div>
+                    <div><input type="checkbox" checked> PODS</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Design automation
+                    <div><input type="checkbox" checked> DAC</div>
+                    <div><input type="checkbox" checked> ICCAD</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Embedded & real-time systems
+                    <div><input type="checkbox" checked> EMSOFT</div>
+                    <div><input type="checkbox" checked> RTAS</div>
+                    <div><input type="checkbox" checked> RTSS</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> High-performance computing
+                    <div><input type="checkbox" checked> HPDC</div>
+                    <div><input type="checkbox" checked> ICS</div>
+                    <div><input type="checkbox" checked> SC</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Mobile computing
+                    <div><input type="checkbox" checked> MobiCom</div>
+                    <div><input type="checkbox" checked> MobiSys</div>
+                    <div><input type="checkbox" checked> SenSys</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Measurement & perf. analysis
+                    <div><input type="checkbox" checked> IMC</div>
+                    <div><input type="checkbox" checked> SIGMETRICS</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Operating systems
+                    <div><input type="checkbox" checked> OSDI</div>
+                    <div><input type="checkbox" checked> SOSP</div>
+                    <div><input type="checkbox" checked> EuroSys</div>
+                    <div><input type="checkbox" checked> FAST</div>
+                    <div><input type="checkbox" checked> USENIX ATC</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Programming languages
+                    <div><input type="checkbox" checked> PLDI</div>
+                    <div><input type="checkbox" checked> POPL</div>
+                    <div><input type="checkbox" checked> ICFP</div>
+                    <div><input type="checkbox" checked> OOPSLA</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Software engineering
+                    <div><input type="checkbox" checked> FSE</div>
+                    <div><input type="checkbox" checked> ICSE</div>
+                    <div><input type="checkbox" checked> ASE</div>
+                    <div><input type="checkbox" checked> ISSTA</div>
+                </div>
+                <input type="checkbox" checked> Theory
+
+                <div>
+                    <input type="checkbox" checked> Algorithms & complexity
+                    <div><input type="checkbox" checked> FOCS</div>
+                    <div><input type="checkbox" checked> SODA</div>
+                    <div><input type="checkbox" checked> STOC</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Cryptography
+                    <div><input type="checkbox" checked> CRYPTO</div>
+                    <div><input type="checkbox" checked> EuroCrypt</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Logic & verification
+                    <div><input type="checkbox" checked> CAV</div>
+                    <div><input type="checkbox" checked> LICS</div>
+                </div>
+                <input type="checkbox" checked> Interdisciplinary Areas
+
+                <div>
+                    <input type="checkbox" checked> Comp. bio & bioinformatics
+                    <div><input type="checkbox" checked> ISMB</div>
+                    <div><input type="checkbox" checked> RECOMB</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Computer graphics
+                    <div><input type="checkbox" checked> SIGGRAPH</div>
+                    <div><input type="checkbox" checked> SIGGRAPH Asia</div>
+                    <div><input type="checkbox" checked> EUROGRAPHICS</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Computer science education
+                    <div><input type="checkbox" checked> SIGCSE</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Economics & computation
+                    <div><input type="checkbox" checked> EC</div>
+                    <div><input type="checkbox" checked> WINE</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Human-computer interaction
+                    <div><input type="checkbox" checked> CHI</div>
+                    <div><input type="checkbox" checked> UbiComp / IMWUT</div>
+                    <div><input type="checkbox" checked> UIST</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Robotics
+                    <div><input type="checkbox" checked> ICRA</div>
+                    <div><input type="checkbox" checked> IROS</div>
+                    <div><input type="checkbox" checked> RSS</div>
+                </div>
+
+                <div>
+                    <input type="checkbox" checked> Visualization
+                    <div><input type="checkbox" checked> VIS</div>
+                    <div><input type="checkbox" checked> VR</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="chart"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
