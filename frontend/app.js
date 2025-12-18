@@ -153,8 +153,13 @@ function setup(){
             console.error("Error loading data:", error);
         });
 
-    var btn = document.getElementById("update-range");
-    btn.addEventListener("click", function(){
+    var from = document.getElementById("from-year");
+    var to = document.getElementById("to-year");
+    from.addEventListener("click", function(){
+        var yrs = getYearsFromInput();
+        updateChart(yrs.from, yrs.to);
+    });
+    to.addEventListener("click", function(){
         var yrs = getYearsFromInput();
         updateChart(yrs.from, yrs.to);
     });
