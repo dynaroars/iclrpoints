@@ -53,19 +53,6 @@ h1 {
     width: 100%;
 }
 
-#date-range button {
-    padding: 8px 15px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-#date-range button:hover {
-    background-color: #45a049;
-}
-
 #checkboxes {
     max-height: 600px;
     overflow-y: auto;

@@ -20,6 +20,22 @@ function populateYearDropdowns() {
     }
 }
 
+function populateBaselineDropdown(data) {
+    var select = document.getElementById("baseline-dropbox");
+    var areas = {};
+    for (var i = 0; i < data.length; i++) {
+        areas[data[i].area] = true;
+    }
+    var sortedAreas = Object.keys(areas).sort();
+    for (var i = 0; i < sortedAreas.length; i++) {
+        var option = document.createElement("option");
+        option.value = sortedAreas[i];
+        option.text = sortedAreas[i];
+        if (sortedAreas[i] === "Machine learning") option.selected = true;
+        select.appendChild(option);
+    }
+}
+
 function filterAndAggregateByYearRange(data, fromYear, toYear) {
     var filtered = data.filter(function(row) {
         return row.year >= fromYear && row.year <= toYear;
@@ -40,12 +56,13 @@ function filterAndAggregateByYearRange(data, fromYear, toYear) {
         areaData[row.area].faculty_count += row.faculty_count;
     }
     
-    var mlArea = areaData["Machine learning"];
-    if (!mlArea || mlArea.publication_count === 0) {
+    var baselineArea = document.getElementById("baseline-dropbox").value || "Machine learning";
+    var baselineData = areaData[baselineArea];
+    if (!baselineData || baselineData.publication_count === 0) {
         return [];
     }
     
-    var baseline = mlArea.faculty_count / mlArea.publication_count;
+    var baseline = baselineData.faculty_count / baselineData.publication_count;
     
     var result = [];
     var areas = Object.keys(areaData).sort();
@@ -169,6 +186,7 @@ function setup(){
         })
         .then(function(data){
             allData = data;
+            populateBaselineDropdown(data);
             var yrs = getYearsFromInput();
             updateChart(yrs.from, yrs.to);
         })
@@ -183,6 +201,12 @@ function setup(){
         updateChart(yrs.from, yrs.to);
     });
     to.addEventListener("click", function(){
+        var yrs = getYearsFromInput();
+        updateChart(yrs.from, yrs.to);
+    });
+
+    var baselineSelect = document.getElementById("baseline-dropbox");
+    baselineSelect.addEventListener("click", function(){
         var yrs = getYearsFromInput();
         updateChart(yrs.from, yrs.to);
     });
