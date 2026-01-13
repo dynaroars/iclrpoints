@@ -104,53 +104,81 @@ def compute_fractional_faculty(area_to_faculty):
 
     return area_to_fraction_fact
 
-def compute_iclr_points_all_years(faculty_set, conf_to_area, area_to_parent):
+def compute_iclr_points_all_years(faculty_set, conf_to_area, area_to_parent, years=None):
+    """
+    Compute ICLR points by aggregating data across years, then calculating fractional faculty and ICLR points.
+    
+    Args:
+        faculty_set: Set of faculty names
+        conf_to_area: Dictionary mapping conference names to areas
+        area_to_parent: Dictionary mapping areas to parent areas
+        years: Optional list of years to aggregate (if None, aggregates all available years)
+    
+    Returns:
+        List of dictionaries with ICLR point results (one per area, aggregated across years)
+    """
     year_area_data = get_cached_dblp_data(conf_to_area, faculty_set)
     
-    all_years = sorted(year_area_data.keys())
-    all_rows = []
+    # Determine which years to aggregate
+    available_years = sorted(year_area_data.keys())
+    if years is None:
+        years_to_aggregate = available_years
+    else:
+        years_to_aggregate = [y for y in years if y in available_years]
     
-    for year in all_years:
-        area_to_pub = {}
-        area_to_faculty = {}
-        
+    if not years_to_aggregate:
+        return []
+    
+    # Step 1: Aggregate data across selected years
+    # Sum publications and union faculty sets
+    aggregated_area_to_pub = {}
+    aggregated_area_to_faculty = {}
+    
+    for year in years_to_aggregate:
         if year in year_area_data:
             for area, data in year_area_data[year].items():
-                area_to_pub[area] = data["pub_count"]
-                area_to_faculty[area] = data["faculty"].copy()
+                # Sum publications
+                aggregated_area_to_pub[area] = aggregated_area_to_pub.get(area, 0) + data["pub_count"]
+                # Union faculty sets
+                if area not in aggregated_area_to_faculty:
+                    aggregated_area_to_faculty[area] = set()
+                aggregated_area_to_faculty[area].update(data["faculty"])
+    
+    if not aggregated_area_to_pub:
+        return []
+    
+    # Step 2: Compute fractional faculty on aggregated data
+    area_to_fraction_fact = compute_fractional_faculty(aggregated_area_to_faculty)
+    
+    # Step 3: Calculate baseline (Machine Learning) using aggregated data
+    ml_fact = area_to_fraction_fact.get("Machine learning")
+    ml_pubs = aggregated_area_to_pub.get("Machine learning")
+    
+    if ml_fact is None or ml_pubs is None or ml_pubs == 0:
+        return []
+    
+    baseline = ml_fact / ml_pubs
+    
+    # Step 4: Calculate ICLR points for each area using aggregated data
+    all_rows = []
+    for area in sorted(aggregated_area_to_pub.keys()):
+        pubs = aggregated_area_to_pub[area]
+        frac_fac = area_to_fraction_fact.get(area, 0)
         
-        if not area_to_pub:
+        if pubs == 0:
             continue
         
-        area_to_fraction_fact = compute_fractional_faculty(area_to_faculty)
+        faculty_per_pub = frac_fac / pubs
+        iclr_points = faculty_per_pub / baseline
+        parent_area = area_to_parent.get(area)
         
-        ml_fact = area_to_fraction_fact.get("Machine learning")
-        ml_pubs = area_to_pub.get("Machine learning")
-        
-        if ml_fact is None or ml_pubs is None or ml_pubs == 0:
-            continue
-        
-        baseline = ml_fact / ml_pubs
-        
-        for area in sorted(area_to_pub.keys()):
-            pubs = area_to_pub[area]
-            frac_fac = area_to_fraction_fact.get(area, 0)
-            
-            if pubs == 0:
-                continue
-            
-            faculty_per_pub = frac_fac / pubs
-            iclr_points = faculty_per_pub / baseline
-            parent_area = area_to_parent.get(area)
-            
-            all_rows.append({
-                "year": year,
-                "area": area,
-                "parent": parent_area,
-                "publication_count": pubs,
-                "faculty_count": round(frac_fac, 2),
-                "faculty_per_pub": round(faculty_per_pub, 6),
-                "iclr_points": round(iclr_points, 2)
-            })
+        all_rows.append({
+            "area": area,
+            "parent": parent_area,
+            "publication_count": pubs,
+            "faculty_count": round(frac_fac, 2),
+            "faculty_per_pub": round(faculty_per_pub, 6),
+            "iclr_points": round(iclr_points, 2)
+        })
     
     return all_rows
