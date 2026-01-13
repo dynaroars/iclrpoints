@@ -30,12 +30,18 @@ get_cached_dblp_data(conf_to_area, faculty_set)
 print("DBLP cache ready")
 
 @app.get("/iclr_points_all")
-def iclr_points_all():
+def iclr_points_all(from_year: int = None, to_year: int = None):
     try:
+        # Build years list if range is provided
+        years = None
+        if from_year is not None and to_year is not None:
+            years = list(range(from_year, to_year + 1))
+        
         rows = compute_iclr_points_all_years(
             faculty_set,
             conf_to_area,
             area_to_parent,
+            years=years,
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
