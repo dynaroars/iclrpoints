@@ -90,26 +90,43 @@ function filterAndAggregateByYearRange(data, fromYear, toYear) {
     return result;
 }
 
-function updateChart(fromYear, toYear) {
-    var filteredData = filterAndAggregateByYearRange(allData, fromYear, toYear);
+function fetchDataFromAPI(fromYear, toYear) {
+    var url = "http://localhost:8001/iclr_points_all";
+    if (fromYear && toYear) {
+        url += "?from_year=" + fromYear + "&to_year=" + toYear;
+    }
     
-    var parentOrder= ["AI", "Systems", "Theory", "Interdisciplinary Areas"];
-    filteredData.sort(function(a,b) {
-        var pa = parentOrder.indexOf(a.parent || a.parent_area);
-        var pb = parentOrder.indexOf(b.parent || b.parent_area);
-        if(pa !== pb) return pa - pb;
-        return a.area.localeCompare(b.area);
-    });
+    return fetch(url)
+        .then(function(response){
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        });
+}
 
-    var areas = [];
-    var values = [];
-    var parents = [];
-    for(var i = filteredData.length - 1; i >= 0; i--) {
-        var row = filteredData[i];
-        areas.push(row.area);
-        values.push(row.iclr_points);
-        parents.push(row.parent || row.parent_area);
-    };
+function updateChart(fromYear, toYear) {
+    // Fetch data from API with year range - backend handles aggregation
+    fetchDataFromAPI(fromYear, toYear)
+        .then(function(data){
+            // Data is already aggregated and calculated by backend
+            var parentOrder= ["AI", "Systems", "Theory", "Interdisciplinary Areas"];
+            data.sort(function(a,b) {
+                var pa = parentOrder.indexOf(a.parent || a.parent_area);
+                var pb = parentOrder.indexOf(b.parent || b.parent_area);
+                if(pa !== pb) return pa - pb;
+                return a.area.localeCompare(b.area);
+            });
+
+            var areas = [];
+            var values = [];
+            var parents = [];
+            for(var i = data.length - 1; i >= 0; i--) {
+                var row = data[i];
+                areas.push(row.area);
+                values.push(row.iclr_points);
+                parents.push(row.parent || row.parent_area);
+            };
     
     var colorMap = {
         "AI": { fill: "rgba(31, 119, 180, 0.3)", line: "rgba(31, 119, 180, 1)" },
@@ -167,6 +184,10 @@ function updateChart(fromYear, toYear) {
     } else {
         Plotly.newPlot("chart", [trace], layout, { displaylogo: false });
     }
+        })
+        .catch(function(error) {
+            console.error("Error loading data:", error);
+        });
 }
 
 function getYearsFromInput() {
@@ -180,14 +201,11 @@ function getYearsFromInput() {
 function setup(){
     populateYearDropdowns();
 
-    fetch("data.json")
-        .then(function(response){
-            return response.json();
-        })
+    // Initial load with default years to populate baseline dropdown
+    var yrs = getYearsFromInput();
+    fetchDataFromAPI(yrs.from, yrs.to)
         .then(function(data){
-            allData = data;
             populateBaselineDropdown(data);
-            var yrs = getYearsFromInput();
             updateChart(yrs.from, yrs.to);
         })
         .catch(function(error) {
@@ -196,17 +214,17 @@ function setup(){
 
     var from = document.getElementById("from-year");
     var to = document.getElementById("to-year");
-    from.addEventListener("click", function(){
+    from.addEventListener("change", function(){
         var yrs = getYearsFromInput();
         updateChart(yrs.from, yrs.to);
     });
-    to.addEventListener("click", function(){
+    to.addEventListener("change", function(){
         var yrs = getYearsFromInput();
         updateChart(yrs.from, yrs.to);
     });
 
     var baselineSelect = document.getElementById("baseline-dropbox");
-    baselineSelect.addEventListener("click", function(){
+    baselineSelect.addEventListener("change", function(){
         var yrs = getYearsFromInput();
         updateChart(yrs.from, yrs.to);
     });
