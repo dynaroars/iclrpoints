@@ -34,12 +34,21 @@ function populateBaselineDropdown(data) {
     }
 }
 
-function fetchDataFromAPI(fromYear, toYear) {
+function fetchDataFromAPI(fromYear, toYear, baselineArea) {
     var url = "http://localhost:8001/iclr_points_all";
+    var params = [];
     if (fromYear && toYear) {
-        url += "?from_year=" + fromYear + "&to_year=" + toYear;
+        params.push("from_year=" + fromYear + "&to_year=" + toYear);
+    }
+
+    if (baselineArea) {
+        params.push("baseline_area=" + encodeURIComponent(baselineArea));
     }
     
+    if (params.length > 0) {
+        url += "?" + params.join("&");
+    }
+
     return fetch(url)
         .then(function(response){
             if (!response.ok) {
@@ -50,8 +59,10 @@ function fetchDataFromAPI(fromYear, toYear) {
 }
 
 function updateChart(fromYear, toYear) {
+
+    var baselineArea = document.getElementById("baseline-dropbox").value || "Machine learning";
     // Fetch data from API with year range - backend handles aggregation
-    fetchDataFromAPI(fromYear, toYear)
+    fetchDataFromAPI(fromYear, toYear, baselineArea)
         .then(function(data){
             // Data is already aggregated and calculated by backend
             var parentOrder= ["AI", "Systems", "Theory", "Interdisciplinary Areas"];
@@ -147,7 +158,8 @@ function setup(){
 
     // Initial load with default years to populate baseline dropdown
     var yrs = getYearsFromInput();
-    fetchDataFromAPI(yrs.from, yrs.to)
+    var baselineArea = document.getElementById("baseline-dropbox").value || "Machine learning";
+    fetchDataFromAPI(yrs.from, yrs.to, baselineArea)
         .then(function(data){
             populateBaselineDropdown(data);
             updateChart(yrs.from, yrs.to);

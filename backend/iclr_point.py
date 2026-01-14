@@ -95,7 +95,7 @@ def compute_fractional_faculty(area_to_faculty):
 
     return area_to_fraction_fact
 
-def compute_iclr_points_all_years(faculty_set, conf_to_area, area_to_parent, years=None):
+def compute_iclr_points_all_years(faculty_set, conf_to_area, area_to_parent, years=None, baseline_area="Machine learning"):
     year_area_data = get_cached_dblp_data(conf_to_area, faculty_set)
     
     # Determine which years to aggregate
@@ -130,13 +130,13 @@ def compute_iclr_points_all_years(faculty_set, conf_to_area, area_to_parent, yea
     area_to_fraction_fact = compute_fractional_faculty(aggregated_area_to_faculty)
     
     # Step 3: Calculate baseline (Machine Learning) using aggregated data
-    ml_fact = area_to_fraction_fact.get("Machine learning")
-    ml_pubs = aggregated_area_to_pub.get("Machine learning")
+    baseline_fact = area_to_fraction_fact.get(baseline_area)
+    baseline_pubs = aggregated_area_to_pub.get(baseline_area)
     
-    if ml_fact is None or ml_pubs is None or ml_pubs == 0:
+    if baseline_fact is None or baseline_pubs is None or baseline_pubs == 0:
         return []
     
-    baseline = ml_fact / ml_pubs
+    baseline = baseline_fact / baseline_pubs
     
     # Step 4: Calculate ICLR points for each area using aggregated data
     all_rows = []
