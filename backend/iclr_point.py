@@ -9,7 +9,6 @@ _dblp_cache = None
 
 def load_faculty_names(csrankings_path):
     faculty_set = set()
-    count = 0
     with open(csrankings_path, "r") as f:
         next(f)
         for line in f:
@@ -18,8 +17,6 @@ def load_faculty_names(csrankings_path):
                 continue
             name = parts[0]
             faculty_set.add(name)
-            count += 1
-    print("Total number of faculties: ", count)
     return faculty_set
 
 def load_conference_to_area(area_path):
@@ -36,15 +33,12 @@ def load_conference_to_area(area_path):
 def parse_dblp_full(dblp_path, conf_to_area, faculty_set):
     year_area_data = {}
     
-    print("Parsing DBLP file...")
     with gzip.open(dblp_path, "rb") as dblp_file:
         context = ET.iterparse(dblp_file, events=("end",))
         _, root = next(context)
 
-        count = 0
-        for event, elem in context:
+        for _, elem in context:
             if elem.tag == "inproceedings":
-                count += 1
                 year_text = elem.findtext("year")
                 booktitle = elem.findtext("booktitle")
                 
@@ -78,10 +72,7 @@ def parse_dblp_full(dblp_path, conf_to_area, faculty_set):
                             year_area_data[year][area]["faculty"].add(author_name)
                             
             root.clear()
-            if count % 100000 == 0:
-                print(f"Processed {count} publications...")
     
-    print(f"Finished parsing {count} publications")
     return year_area_data
 
 def get_cached_dblp_data(conf_to_area, faculty_set):
@@ -105,18 +96,6 @@ def compute_fractional_faculty(area_to_faculty):
     return area_to_fraction_fact
 
 def compute_iclr_points_all_years(faculty_set, conf_to_area, area_to_parent, years=None):
-    """
-    Compute ICLR points by aggregating data across years, then calculating fractional faculty and ICLR points.
-    
-    Args:
-        faculty_set: Set of faculty names
-        conf_to_area: Dictionary mapping conference names to areas
-        area_to_parent: Dictionary mapping areas to parent areas
-        years: Optional list of years to aggregate (if None, aggregates all available years)
-    
-    Returns:
-        List of dictionaries with ICLR point results (one per area, aggregated across years)
-    """
     year_area_data = get_cached_dblp_data(conf_to_area, faculty_set)
     
     # Determine which years to aggregate
