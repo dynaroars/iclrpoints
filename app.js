@@ -1,11 +1,9 @@
-var allData = [];
-
 function populateYearDropdowns() {
     var fromSelect = document.getElementById("from-year");
     var toSelect = document.getElementById("to-year");
     var currentYear = new Date().getFullYear();
     
-    for (var year = 2000; year <= currentYear; year++) {
+    for (var year = 1970; year <= currentYear; year++) {
         var option1 = document.createElement("option");
         option1.value = year;
         option1.text = year;
@@ -34,60 +32,6 @@ function populateBaselineDropdown(data) {
         if (sortedAreas[i] === "Machine learning") option.selected = true;
         select.appendChild(option);
     }
-}
-
-function filterAndAggregateByYearRange(data, fromYear, toYear) {
-    var filtered = data.filter(function(row) {
-        return row.year >= fromYear && row.year <= toYear;
-    });
-    
-    var areaData = {};
-    for (var i = 0; i < filtered.length; i++) {
-        var row = filtered[i];
-        if (!areaData[row.area]) {
-            areaData[row.area] = {
-                area: row.area,
-                parent: row.parent,
-                publication_count: 0,
-                faculty_count: 0
-            };
-        }
-        areaData[row.area].publication_count += row.publication_count;
-        areaData[row.area].faculty_count += row.faculty_count;
-    }
-    
-    var baselineArea = document.getElementById("baseline-dropbox").value || "Machine learning";
-    var baselineData = areaData[baselineArea];
-    if (!baselineData || baselineData.publication_count === 0) {
-        return [];
-    }
-    
-    var baseline = baselineData.faculty_count / baselineData.publication_count;
-    
-    var result = [];
-    var areas = Object.keys(areaData).sort();
-    for (var i = 0; i < areas.length; i++) {
-        var area = areas[i];
-        var data = areaData[area];
-        
-        if (data.publication_count === 0) {
-            continue;
-        }
-        
-        var facultyPerPub = data.faculty_count / data.publication_count;
-        var iclrPoints = facultyPerPub / baseline;
-        
-        result.push({
-            area: data.area,
-            parent: data.parent,
-            faculty_count: Math.round(data.faculty_count * 100) / 100,
-            publication_count: data.publication_count,
-            faculty_per_pub: Math.round(facultyPerPub * 100) / 100,
-            iclr_points: Math.round(iclrPoints * 100) / 100
-        });
-    }
-    
-    return result;
 }
 
 function fetchDataFromAPI(fromYear, toYear) {
