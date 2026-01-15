@@ -7,4 +7,8 @@ __pycache__/
 .env.*
 .DS_Store
 venv/
-.DS_Store
+test.py
+generate_per_year_data.py
+
+#data files
+data/dblp.xml.gz
