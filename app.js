@@ -1,3 +1,6 @@
+// Global variable for loaded per-year data
+var perYearData = null;
+
 function populateYearDropdowns() {
     var fromSelect = document.getElementById("from-year");
     var toSelect = document.getElementById("to-year");
@@ -18,13 +21,12 @@ function populateYearDropdowns() {
     }
 }
 
-function populateBaselineDropdown(data) {
+function populateBaselineDropdown(areas) {
     var select = document.getElementById("baseline-dropbox");
-    var areas = {};
-    for (var i = 0; i < data.length; i++) {
-        areas[data[i].area] = true;
-    }
-    var sortedAreas = Object.keys(areas).sort();
+    // Clear existing options
+    select.innerHTML = "";
+    
+    var sortedAreas = areas.sort();
     for (var i = 0; i < sortedAreas.length; i++) {
         var option = document.createElement("option");
         option.value = sortedAreas[i];
@@ -34,37 +36,153 @@ function populateBaselineDropdown(data) {
     }
 }
 
-function fetchDataFromAPI(fromYear, toYear, baselineArea) {
-    var url = "http://localhost:8001/iclr_points_all";
-    var params = [];
-    if (fromYear && toYear) {
-        params.push("from_year=" + fromYear + "&to_year=" + toYear);
-    }
-
-    if (baselineArea) {
-        params.push("baseline_area=" + encodeURIComponent(baselineArea));
+// Load per-year data from JSON file
+function loadPerYearData() {
+    if (perYearData !== null) {
+        return Promise.resolve(perYearData);
     }
     
-    if (params.length > 0) {
-        url += "?" + params.join("&");
-    }
-
-    return fetch(url)
-        .then(function(response){
+    return fetch("per_year_data.json")
+        .then(function(response) {
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
             return response.json();
+        })
+        .then(function(data) {
+            perYearData = data;
+            return data;
+        });
+}
+
+// Compute fractional faculty (same logic as backend)
+function computeFractionalFaculty(areaToFaculty) {
+    var facultyToAreas = {};
+    
+    // Build reverse mapping: faculty -> areas they published in
+    for (var area in areaToFaculty) {
+        var facultyMembers = areaToFaculty[area];
+        for (var i = 0; i < facultyMembers.length; i++) {
+            var faculty = facultyMembers[i];
+            if (!facultyToAreas[faculty]) {
+                facultyToAreas[faculty] = [];
+            }
+            facultyToAreas[faculty].push(area);
+        }
+    }
+    
+    // Compute fractional counts
+    var areaToFractionalFacultyCount = {};
+    for (var faculty in facultyToAreas) {
+        var areas = facultyToAreas[faculty];
+        var share = 1 / areas.length;
+        for (var i = 0; i < areas.length; i++) {
+            var area = areas[i];
+            areaToFractionalFacultyCount[area] = (areaToFractionalFacultyCount[area] || 0) + share;
+        }
+    }
+    
+    return areaToFractionalFacultyCount;
+}
+
+// Compute ICLR points (same logic as backend)
+function computeICLRPoints(fromYear, toYear, baselineArea) {
+    if (!perYearData) {
+        throw new Error("Data not loaded");
+    }
+    
+    // Step 1: Aggregate data across selected years
+    var aggregatedPublicationCountByArea = {};
+    var aggregatedFacultySetsByArea = {};
+    
+    for (var year = fromYear; year <= toYear; year++) {
+        var yearStr = String(year);
+        if (!perYearData.years[yearStr]) {
+            continue;
+        }
+        
+        var yearData = perYearData.years[yearStr];
+        for (var area in yearData) {
+            var data = yearData[area];
+            
+            // Sum publications
+            aggregatedPublicationCountByArea[area] = 
+                (aggregatedPublicationCountByArea[area] || 0) + data.publication_count;
+            
+            // Union faculty sets (avoid duplicates)
+            if (!aggregatedFacultySetsByArea[area]) {
+                aggregatedFacultySetsByArea[area] = [];
+            }
+            var existingSet = new Set(aggregatedFacultySetsByArea[area]);
+            for (var i = 0; i < data.faculty_names.length; i++) {
+                existingSet.add(data.faculty_names[i]);
+            }
+            aggregatedFacultySetsByArea[area] = Array.from(existingSet);
+        }
+    }
+    
+    if (Object.keys(aggregatedPublicationCountByArea).length === 0) {
+        return [];
+    }
+    
+    // Step 2: Compute fractional faculty
+    var areaToFractionalFacultyCount = computeFractionalFaculty(aggregatedFacultySetsByArea);
+    
+    // Step 3: Calculate baseline
+    var baselineFractionalFacultyCount = areaToFractionalFacultyCount[baselineArea];
+    var baselinePublicationCount = aggregatedPublicationCountByArea[baselineArea];
+    
+    if (!baselineFractionalFacultyCount || !baselinePublicationCount || baselinePublicationCount === 0) {
+        return [];
+    }
+    
+    var baseline = baselineFractionalFacultyCount / baselinePublicationCount;
+    
+    // Step 4: Calculate ICLR points for each area
+    var results = [];
+    var areas = Object.keys(aggregatedPublicationCountByArea).sort();
+    
+    for (var i = 0; i < areas.length; i++) {
+        var area = areas[i];
+        var publicationCount = aggregatedPublicationCountByArea[area];
+        var fractionalFacultyCount = areaToFractionalFacultyCount[area] || 0;
+        
+        if (publicationCount === 0) {
+            continue;
+        }
+        
+        var facultyPerPub = fractionalFacultyCount / publicationCount;
+        var iclrPoints = facultyPerPub / baseline;
+        var parentArea = perYearData.area_to_parent[area];
+        
+        results.push({
+            area: area,
+            parent: parentArea,
+            publication_count: publicationCount,
+            faculty_count: Math.round(fractionalFacultyCount * 100) / 100,
+            faculty_per_pub: Math.round(facultyPerPub * 1000000) / 1000000,
+            iclr_points: Math.round(iclrPoints * 100) / 100
+        });
+    }
+    
+    return results;
+}
+
+// Compute ICLR points from per-year data
+function getICLRPointsData(fromYear, toYear, baselineArea) {
+    return loadPerYearData()
+        .then(function() {
+            return computeICLRPoints(fromYear, toYear, baselineArea);
         });
 }
 
 function updateChart(fromYear, toYear) {
 
     var baselineArea = document.getElementById("baseline-dropbox").value || "Machine learning";
-    // Fetch data from API with year range - backend handles aggregation
-    fetchDataFromAPI(fromYear, toYear, baselineArea)
+    // Compute ICLR points client-side from per-year data
+    getICLRPointsData(fromYear, toYear, baselineArea)
         .then(function(data){
-            // Data is already aggregated and calculated by backend
+            // Data is computed client-side using same logic as backend
             var parentOrder= ["AI", "Systems", "Theory", "Interdisciplinary Areas"];
             data.sort(function(a,b) {
                 var pa = parentOrder.indexOf(a.parent || a.parent_area);
@@ -156,12 +274,16 @@ function getYearsFromInput() {
 function setup(){
     populateYearDropdowns();
 
-    // Initial load with default years to populate baseline dropdown
-    var yrs = getYearsFromInput();
-    var baselineArea = document.getElementById("baseline-dropbox").value || "Machine learning";
-    fetchDataFromAPI(yrs.from, yrs.to, baselineArea)
-        .then(function(data){
-            populateBaselineDropdown(data);
+    // Load per-year data and populate baseline dropdown
+    loadPerYearData()
+        .then(function(data) {
+            // Populate baseline dropdown from available areas
+            if (data.available_areas && data.available_areas.length > 0) {
+                populateBaselineDropdown(data.available_areas);
+            }
+            
+            // Initial load with default years
+            var yrs = getYearsFromInput();
             updateChart(yrs.from, yrs.to);
         })
         .catch(function(error) {
