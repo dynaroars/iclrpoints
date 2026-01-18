@@ -63,6 +63,10 @@ h1 {
 
 #checkboxes input[type="checkbox"] {
     margin-right: 5px;
+    pointer-events: none;
+    opacity: 0.35;
+    filter: grayscale(100%);
+    cursor: not-allowed;
 }
 
 #checkboxes > div {

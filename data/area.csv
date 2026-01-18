@@ -7,7 +7,6 @@ AI,Computer vision,vision,ICCV
 AI,Machine learning,mlmining,ICLR
 AI,Machine learning,mlmining,ICML
 AI,Machine learning,mlmining,NeurIPS
-AI,Machine learning,mlmining,KDD
 AI,Natural language processing,nlp,ACL
 AI,Natural language processing,nlp,EMNLP
 AI,Natural language processing,nlp,NAACL
@@ -18,12 +17,9 @@ Systems,Computer architecture,arch,ISCA
 Systems,Computer architecture,arch,MICRO
 Systems,Computer networks,comm,SIGCOMM
 Systems,Computer networks,comm,NSDI
-Systems,Computer networks,comm,INFOCOM
 Systems,Computer security,sec,CCS
 Systems,Computer security,sec,IEEE S&P
 Systems,Computer security,sec,USENIX Security
-Systems,Computer security,sec,NDSS
-Systems,Databases,mod,PODS
 Systems,Databases,mod,SIGMOD
 Systems,Databases,mod,VLDB
 Systems,Design automation,da,DAC
