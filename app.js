@@ -194,11 +194,13 @@ function updateChart(fromYear, toYear) {
             var areas = [];
             var values = [];
             var parents = [];
+            var customdata = [];
             for(var i = data.length - 1; i >= 0; i--) {
                 var row = data[i];
                 areas.push(row.area);
                 values.push(row.iclr_points);
                 parents.push(row.parent || row.parent_area);
+                customdata.push([row.faculty_count, row.publication_count]);
             };
     
     var colorMap = {
@@ -210,6 +212,10 @@ function updateChart(fromYear, toYear) {
     var defaultColor = { fill: "rgba(150, 150, 150, 0.3)", line: "rgba(150, 150, 150, 1)" };
     var barColors = parents.map(function(p){ return (colorMap[p] || defaultColor).fill; });
     var lineColors = parents.map(function(p){ return (colorMap[p] || defaultColor).line; });
+
+    var hovertemplate = '<b>%{y}</b><br>' +
+        'Faculty: %{customdata[0]}<br>' +
+        'Publications: %{customdata[1]}<br>'
 
     var trace = {
         type: "bar",
@@ -223,7 +229,9 @@ function updateChart(fromYear, toYear) {
         text: values.map(function(v) { return v.toFixed(2); }),
         textposition: 'inside',
         insidetextanchor: 'start',
-        textfont: { color: '#333', size: 15 }
+        textfont: { color: '#333', size: 15 },
+        customdata: customdata,
+        hovertemplate: hovertemplate
     };
 
     var layout = {
