@@ -204,18 +204,19 @@ function updateChart(fromYear, toYear) {
             };
     
     var colorMap = {
-        "AI": { fill: "rgba(31, 119, 180, 0.3)", line: "rgba(31, 119, 180, 1)" },
-        "Systems": { fill: "rgba(255, 127, 14, 0.3)", line: "rgba(255, 127, 14, 1)" },
-        "Theory": { fill: "rgba(44, 160, 44, 0.3)", line: "rgba(44, 160, 44, 1)" },
-        "Interdisciplinary Areas": { fill: "rgba(148, 103, 189, 0.3)", line: "rgba(148, 103, 189, 1)" }
+        "AI": { fill: "rgba(31, 119, 180, 0.4)", line: "rgba(31, 119, 180, 0.9)", hover: "rgba(31, 119, 180, 0.6)" },
+        "Systems": { fill: "rgba(255, 127, 14, 0.4)", line: "rgba(255, 127, 14, 0.9)", hover: "rgba(255, 127, 14, 0.6)" },
+        "Theory": { fill: "rgba(44, 160, 44, 0.4)", line: "rgba(44, 160, 44, 0.9)", hover: "rgba(44, 160, 44, 0.6)" },
+        "Interdisciplinary Areas": { fill: "rgba(148, 103, 189, 0.4)", line: "rgba(148, 103, 189, 0.9)", hover: "rgba(148, 103, 189, 0.6)" }
     };
-    var defaultColor = { fill: "rgba(150, 150, 150, 0.3)", line: "rgba(150, 150, 150, 1)" };
+    var defaultColor = { fill: "rgba(150, 150, 150, 0.4)", line: "rgba(150, 150, 150, 0.9)", hover: "rgba(150, 150, 150, 0.6)" };
     var barColors = parents.map(function(p){ return (colorMap[p] || defaultColor).fill; });
     var lineColors = parents.map(function(p){ return (colorMap[p] || defaultColor).line; });
 
     var hovertemplate = '<b>%{y}</b><br>' +
         'Faculty: %{customdata[0]}<br>' +
-        'Publications: %{customdata[1]}<br>'
+        'Publications: %{customdata[1]}<br>' +
+        '<extra></extra>';
 
     var trace = {
         type: "bar",
@@ -224,46 +225,117 @@ function updateChart(fromYear, toYear) {
         orientation: "h",
         marker: {
             color: barColors,
-            line: { color: lineColors, width: 1.5 }
+            line: { 
+                color: lineColors, 
+                width: 1.8,
+                smoothing: 1.0
+            },
+            opacity: 0.95
         },
         text: values.map(function(v) { return v.toFixed(2); }),
         textposition: 'inside',
         insidetextanchor: 'start',
-        textfont: { color: '#333', size: 15 },
+        textfont: { 
+            color: '#2c3e50', 
+            size: 14,
+            family: 'Arial, sans-serif'
+        },
         customdata: customdata,
-        hovertemplate: hovertemplate
+        hovertemplate: hovertemplate,
+        hoverlabel: {
+            bgcolor: 'rgba(255, 255, 255, 0.95)',
+            bordercolor: 'rgba(0, 0, 0, 0.2)',
+            font: {
+                family: 'Arial, sans-serif',
+                size: 12,
+                color: '#2c3e50'
+            },
+            namelength: -1
+        }
     };
 
     var layout = {
         height: 700,
-        margin: { l: 250, r: 250, t: 10, b: 15 },
-        bargap: 0.17,
+        margin: { l: 250, r: 250, t: 60, b: 20 },
+        bargap: 0.2,
+        bargroupgap: 0.05,
+        title: {
+            text: 'ICLR Points',
+            font: {
+                size: 18,
+                color: '#2c3e50',
+                family: 'Arial, sans-serif'
+            },
+            x: 0.5,
+            xanchor: 'center',
+            y: 0.98,
+            yanchor: 'top'
+        },
+        transition: {
+            duration: 500,
+            easing: 'cubic-in-out'
+        },
 
         xaxis: {
           range: [-0.1, 6],
           autorange: false,
           fixedrange: true,
           showgrid: true,
-          gridcolor: "rgba(0,0,0,0.08)",
+          gridcolor: "rgba(0,0,0,0.06)",
+          gridwidth: 1,
+          zeroline: false,
+          tickfont: {
+              size: 11,
+              color: '#7f8c8d',
+              family: 'Arial, sans-serif'
+          }
         },
       
         yaxis: {
           fixedrange: true,
-          tickfont: { size: 12 },
+          tickfont: { 
+              size: 12,
+              color: '#2c3e50',
+              family: 'Arial, sans-serif'
+          },
           automargin: false,
-          showgrid: true
+          showgrid: false,
+          linecolor: 'rgba(0,0,0,0.1)',
+          linewidth: 1
         },
       
         showlegend: false,
-        paper_bgcolor: "white",
-        plot_bgcolor: "white",
+        paper_bgcolor: "rgba(255, 255, 255, 0)",
+        plot_bgcolor: "rgba(250, 250, 250, 0.3)",
+        hovermode: 'closest',
+        font: {
+            family: 'Arial, sans-serif'
+        }
       };
       
 
+    var config = {
+        displaylogo: false,
+        displayModeBar: false,
+        responsive: true,
+        doubleClick: 'reset',
+        showTips: false
+    };
+
     if (document.getElementById("chart").data) {
-        Plotly.react("chart", [trace], layout, { displaylogo: false });
+        Plotly.animate("chart", {
+            data: [trace],
+            layout: layout,
+            transition: {
+                duration: 500,
+                easing: 'cubic-in-out'
+            },
+            frame: {
+                duration: 500
+            }
+        }, config);
     } else {
-        Plotly.newPlot("chart", [trace], layout, { displaylogo: false });
+        Plotly.newPlot("chart", [trace], layout, config);
     }
         })
         .catch(function(error) {
