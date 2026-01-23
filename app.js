@@ -160,7 +160,6 @@ function computeICLRPoints(fromYear, toYear, baselineArea) {
             parent: parentArea,
             publication_count: publicationCount,
             faculty_count: Math.round(fractionalFacultyCount * 100) / 100,
-            faculty_per_pub: Math.round(facultyPerPub * 1000000) / 1000000,
             iclr_points: Math.round(iclrPoints * 100) / 100
         });
     }
@@ -185,8 +184,8 @@ function updateChart(fromYear, toYear) {
             // Data is computed client-side using same logic as backend
             var parentOrder= ["AI", "Systems", "Theory", "Interdisciplinary Areas"];
             data.sort(function(a,b) {
-                var pa = parentOrder.indexOf(a.parent || a.parent_area);
-                var pb = parentOrder.indexOf(b.parent || b.parent_area);
+                var pa = parentOrder.indexOf(a.parent);
+                var pb = parentOrder.indexOf(b.parent);
                 if(pa !== pb) return pa - pb;
                 return a.area.localeCompare(b.area);
             });
@@ -199,17 +198,17 @@ function updateChart(fromYear, toYear) {
                 var row = data[i];
                 areas.push(row.area);
                 values.push(row.iclr_points);
-                parents.push(row.parent || row.parent_area);
+                parents.push(row.parent);
                 customdata.push([row.faculty_count, row.publication_count]);
             };
     
     var colorMap = {
-        "AI": { fill: "rgba(31, 119, 180, 0.4)", line: "rgba(31, 119, 180, 0.9)", hover: "rgba(31, 119, 180, 0.6)" },
-        "Systems": { fill: "rgba(255, 127, 14, 0.4)", line: "rgba(255, 127, 14, 0.9)", hover: "rgba(255, 127, 14, 0.6)" },
-        "Theory": { fill: "rgba(44, 160, 44, 0.4)", line: "rgba(44, 160, 44, 0.9)", hover: "rgba(44, 160, 44, 0.6)" },
-        "Interdisciplinary Areas": { fill: "rgba(148, 103, 189, 0.4)", line: "rgba(148, 103, 189, 0.9)", hover: "rgba(148, 103, 189, 0.6)" }
+        "AI": { fill: "rgba(31, 119, 180, 0.4)", line: "rgba(31, 119, 180, 0.9)" },
+        "Systems": { fill: "rgba(255, 127, 14, 0.4)", line: "rgba(255, 127, 14, 0.9)" },
+        "Theory": { fill: "rgba(44, 160, 44, 0.4)", line: "rgba(44, 160, 44, 0.9)" },
+        "Interdisciplinary Areas": { fill: "rgba(148, 103, 189, 0.4)", line: "rgba(148, 103, 189, 0.9)" }
     };
-    var defaultColor = { fill: "rgba(150, 150, 150, 0.4)", line: "rgba(150, 150, 150, 0.9)", hover: "rgba(150, 150, 150, 0.6)" };
+    var defaultColor = { fill: "rgba(150, 150, 150, 0.4)", line: "rgba(150, 150, 150, 0.9)" };
     var barColors = parents.map(function(p){ return (colorMap[p] || defaultColor).fill; });
     var lineColors = parents.map(function(p){ return (colorMap[p] || defaultColor).line; });
 
@@ -227,8 +226,7 @@ function updateChart(fromYear, toYear) {
             color: barColors,
             line: { 
                 color: lineColors, 
-                width: 1.8,
-                smoothing: 1.0
+                width: 0.8
             },
             opacity: 0.95
         },
@@ -237,7 +235,7 @@ function updateChart(fromYear, toYear) {
         insidetextanchor: 'start',
         textfont: { 
             color: '#2c3e50', 
-            size: 14,
+            size: 20,
             family: 'Arial, sans-serif'
         },
         customdata: customdata,
@@ -255,10 +253,10 @@ function updateChart(fromYear, toYear) {
     };
 
     var layout = {
+        width: 650,
         height: 700,
-        margin: { l: 250, r: 250, t: 60, b: 20 },
+        margin: { l: 200, r: 120, t: 50, b: 20 },
         bargap: 0.2,
-        bargroupgap: 0.05,
         title: {
             text: 'ICLR Points',
             font: {
@@ -271,10 +269,6 @@ function updateChart(fromYear, toYear) {
             y: 0.98,
             yanchor: 'top'
         },
-        transition: {
-            duration: 500,
-            easing: 'cubic-in-out'
-        },
 
         xaxis: {
           range: [-0.1, 6],
@@ -284,6 +278,10 @@ function updateChart(fromYear, toYear) {
           gridcolor: "rgba(0,0,0,0.06)",
           gridwidth: 1,
           zeroline: false,
+          showline: true,
+          mirror: true,
+          linecolor: 'rgba(0,0,0,0.3)',
+          linewidth: 1,
           tickfont: {
               size: 11,
               color: '#7f8c8d',
@@ -300,7 +298,9 @@ function updateChart(fromYear, toYear) {
           },
           automargin: false,
           showgrid: false,
-          linecolor: 'rgba(0,0,0,0.1)',
+          showline: true,
+          mirror: true,
+          linecolor: 'rgba(0,0,0,0.3)',
           linewidth: 1
         },
       
