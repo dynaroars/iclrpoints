@@ -9,7 +9,7 @@ _dblp_cache = None
 
 def load_faculty_names(csrankings_path):
     faculty_set = set()
-    with open(csrankings_path, "r") as f:
+    with open(csrankings_path, "r", encoding="utf-8") as f:
         next(f)
         for line in f:
             parts = line.strip().split(",")
@@ -22,7 +22,7 @@ def load_faculty_names(csrankings_path):
 def load_conference_to_area(area_path):
     conf_to_area = {}
     area_to_parent = {}
-    with open(area_path, "r") as f:
+    with open(area_path, "r", encoding="utf-8") as f:
         next(f)
         for line in f:
             parent_area, area, abbrv, conference = line.strip().split(",")
