@@ -6,12 +6,18 @@ body {
 }
 
 h1 {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 10px;
 }
 
 .intro-text {
     margin-bottom: 20px;
     line-height: 1.6;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .intro-text a {
@@ -26,6 +32,9 @@ h1 {
 #layout {
     display: flex;
     gap: 20px;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 #sidebar {
