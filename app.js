@@ -191,6 +191,7 @@ function updateChart(fromYear, toYear) {
     var hovertemplate = '<b>%{y}</b><br>' +
         'Faculty: %{customdata[0]}<br>' +
         'Publications: %{customdata[1]}<br>' +
+        'ICLR Points: %{x:.2f}<br>' +
         '<extra></extra>';
 
     var trace = {
