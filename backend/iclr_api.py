@@ -24,15 +24,11 @@ app.add_middleware(
 
 faculty_set = load_faculty_names(CSRANKINGS_PATH)
 conf_to_area, area_to_parent = load_conference_to_area(AREA_PATH)
-
-print("Pre-loading DBLP data cache...")
 get_cached_dblp_data(conf_to_area, faculty_set)
-print("DBLP cache ready")
 
 @app.get("/iclr_points_all")
 def iclr_points_all(from_year: int = None, to_year: int = None, baseline_area: str = "Machine learning"):
     try:
-        # Build years list if range is provided
         years = None
         if from_year is not None and to_year is not None:
             years = list(range(from_year, to_year + 1))

@@ -8,7 +8,6 @@ __pycache__/
 .DS_Store
 venv/
 test.py
-generate_per_year_data.py
 
 #data files
 data/dblp.xml.gz

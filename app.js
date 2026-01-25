@@ -1,4 +1,3 @@
-// Global variable for loaded per-year data
 var perYearData = null;
 
 function populateYearDropdowns() {
@@ -23,7 +22,6 @@ function populateYearDropdowns() {
 
 function populateBaselineDropdown(areas) {
     var select = document.getElementById("baseline-dropbox");
-    // Clear existing options
     select.innerHTML = "";
     
     var sortedAreas = areas.sort();
@@ -36,7 +34,6 @@ function populateBaselineDropdown(areas) {
     }
 }
 
-// Load per-year data from JSON file
 function loadPerYearData() {
     if (perYearData !== null) {
         return Promise.resolve(perYearData);
@@ -55,11 +52,9 @@ function loadPerYearData() {
         });
 }
 
-// Compute fractional faculty (same logic as backend)
 function computeFractionalFaculty(areaToFaculty) {
     var facultyToAreas = {};
-    
-    // Build reverse mapping: faculty -> areas they published in
+
     for (var area in areaToFaculty) {
         var facultyMembers = areaToFaculty[area];
         for (var i = 0; i < facultyMembers.length; i++) {
@@ -70,8 +65,6 @@ function computeFractionalFaculty(areaToFaculty) {
             facultyToAreas[faculty].push(area);
         }
     }
-    
-    // Compute fractional counts
     var areaToFractionalFacultyCount = {};
     for (var faculty in facultyToAreas) {
         var areas = facultyToAreas[faculty];
@@ -85,13 +78,10 @@ function computeFractionalFaculty(areaToFaculty) {
     return areaToFractionalFacultyCount;
 }
 
-// Compute ICLR points (same logic as backend)
 function computeICLRPoints(fromYear, toYear, baselineArea) {
     if (!perYearData) {
         throw new Error("Data not loaded");
     }
-    
-    // Step 1: Aggregate data across selected years
     var aggregatedPublicationCountByArea = {};
     var aggregatedFacultySetsByArea = {};
     
@@ -104,12 +94,8 @@ function computeICLRPoints(fromYear, toYear, baselineArea) {
         var yearData = perYearData.years[yearStr];
         for (var area in yearData) {
             var data = yearData[area];
-            
-            // Sum publications
-            aggregatedPublicationCountByArea[area] = 
+            aggregatedPublicationCountByArea[area] =
                 (aggregatedPublicationCountByArea[area] || 0) + data.publication_count;
-            
-            // Union faculty sets (avoid duplicates)
             if (!aggregatedFacultySetsByArea[area]) {
                 aggregatedFacultySetsByArea[area] = [];
             }
@@ -124,11 +110,7 @@ function computeICLRPoints(fromYear, toYear, baselineArea) {
     if (Object.keys(aggregatedPublicationCountByArea).length === 0) {
         return [];
     }
-    
-    // Step 2: Compute fractional faculty
     var areaToFractionalFacultyCount = computeFractionalFaculty(aggregatedFacultySetsByArea);
-    
-    // Step 3: Calculate baseline
     var baselineFractionalFacultyCount = areaToFractionalFacultyCount[baselineArea];
     var baselinePublicationCount = aggregatedPublicationCountByArea[baselineArea];
     
@@ -137,8 +119,6 @@ function computeICLRPoints(fromYear, toYear, baselineArea) {
     }
     
     var baseline = baselineFractionalFacultyCount / baselinePublicationCount;
-    
-    // Step 4: Calculate ICLR points for each area
     var results = [];
     var areas = Object.keys(aggregatedPublicationCountByArea).sort();
     
@@ -167,7 +147,6 @@ function computeICLRPoints(fromYear, toYear, baselineArea) {
     return results;
 }
 
-// Compute ICLR points from per-year data
 function getICLRPointsData(fromYear, toYear, baselineArea) {
     return loadPerYearData()
         .then(function() {
@@ -176,12 +155,9 @@ function getICLRPointsData(fromYear, toYear, baselineArea) {
 }
 
 function updateChart(fromYear, toYear) {
-
     var baselineArea = document.getElementById("baseline-dropbox").value || "Machine learning";
-    // Compute ICLR points client-side from per-year data
     getICLRPointsData(fromYear, toYear, baselineArea)
         .then(function(data){
-            // Data is computed client-side using same logic as backend
             var parentOrder= ["AI", "Systems", "Theory", "Interdisciplinary Areas"];
             data.sort(function(a,b) {
                 var pa = parentOrder.indexOf(a.parent);
@@ -353,16 +329,11 @@ function getYearsFromInput() {
 
 function setup(){
     populateYearDropdowns();
-
-    // Load per-year data and populate baseline dropdown
     loadPerYearData()
         .then(function(data) {
-            // Populate baseline dropdown from available areas
             if (data.available_areas && data.available_areas.length > 0) {
                 populateBaselineDropdown(data.available_areas);
             }
-            
-            // Initial load with default years
             var yrs = getYearsFromInput();
             updateChart(yrs.from, yrs.to);
         })

@@ -97,8 +97,6 @@ def compute_fractional_faculty(area_to_faculty):
 
 def compute_iclr_points_all_years(faculty_set, conf_to_area, area_to_parent, years=None, baseline_area="Machine learning"):
     year_area_data = get_cached_dblp_data(conf_to_area, faculty_set)
-    
-    # Determine which years to aggregate
     available_years = sorted(year_area_data.keys())
     if years is None:
         years_to_aggregate = available_years
@@ -107,29 +105,20 @@ def compute_iclr_points_all_years(faculty_set, conf_to_area, area_to_parent, yea
     
     if not years_to_aggregate:
         return []
-    
-    # Step 1: Aggregate data across selected years
-    # Sum publications and union faculty sets
     aggregated_publication_count_by_area = {}
     aggregated_faculty_sets_by_area = {}
     
     for year in years_to_aggregate:
         if year in year_area_data:
             for area, data in year_area_data[year].items():
-                # Sum publications
                 aggregated_publication_count_by_area[area] = aggregated_publication_count_by_area.get(area, 0) + data["publication_count"]
-                # Union faculty sets
                 if area not in aggregated_faculty_sets_by_area:
                     aggregated_faculty_sets_by_area[area] = set()
                 aggregated_faculty_sets_by_area[area].update(data["faculty_names"])
     
     if not aggregated_publication_count_by_area:
         return []
-    
-    # Step 2: Compute fractional faculty on aggregated data
     area_to_fractional_faculty_count = compute_fractional_faculty(aggregated_faculty_sets_by_area)
-    
-    # Step 3: Calculate baseline using the specified baseline_area
     baseline_fractional_faculty_count = area_to_fractional_faculty_count.get(baseline_area)
     baseline_publication_count = aggregated_publication_count_by_area.get(baseline_area)
     
@@ -137,8 +126,6 @@ def compute_iclr_points_all_years(faculty_set, conf_to_area, area_to_parent, yea
         return []
     
     baseline = baseline_fractional_faculty_count / baseline_publication_count
-    
-    # Step 4: Calculate ICLR points for each area using aggregated data
     iclr_points_results = []
     for area in sorted(aggregated_publication_count_by_area.keys()):
         publication_count = aggregated_publication_count_by_area[area]
