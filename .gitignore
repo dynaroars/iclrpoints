@@ -11,3 +11,4 @@ test.py
 
 #data files
 data/dblp.xml.gz
+per_year_data.json
