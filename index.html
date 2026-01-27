@@ -12,21 +12,26 @@
     
     <div class="intro-text">
         <p>ICLR Points compares the effort required to publish top-tier papers in different computer science fields, using Machine Learning as a common baseline.</p>
+        <div id="date-range">
+            <div class="control">
+                <label for="from-year">From Date:</label>
+                <select id="from-year"></select>
+            </div>
+            
+            <div class="control">
+                <label for="to-year">To Date:</label>
+                <select id="to-year"></select>
+            </div>
+
+            <div class="control">
+                <label for="baseline-dropbox">Baseline:</label>
+                <select id="baseline-dropbox"></select>
+            </div>
+        </div>
     </div>
 
     <div id="layout">
         <div id="sidebar">
-            <div id="date-range">
-                <label>From Date:</label>
-                <select id="from-year"></select>
-                
-                <label>To Date:</label>
-                <select id="to-year"></select>
-
-                <label>Baseline:</label>
-                <select id="baseline-dropbox"></select>
-            </div>
-
             <div id="checkboxes">
                 <input type="checkbox" checked> AI
 

@@ -230,9 +230,9 @@ function updateChart(fromYear, toYear) {
     };
 
     var layout = {
-        width: 650,
-        height: 700,
-        margin: { l: 200, r: 120, t: 50, b: 20 },
+        width: 760,
+        height: 760,
+        margin: { l: 230, r: 120, t: 50, b: 20 },
         bargap: 0.2,
         title: {
             text: 'ICLR Points',
@@ -269,7 +269,7 @@ function updateChart(fromYear, toYear) {
         yaxis: {
           fixedrange: true,
           tickfont: { 
-              size: 12,
+              size: 15,
               color: '#2c3e50',
               family: 'Arial, sans-serif'
           },
