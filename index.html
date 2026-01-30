@@ -33,199 +33,209 @@
     <div id="layout">
         <div id="sidebar">
             <div id="checkboxes">
-                <input type="checkbox" checked> AI
-
-                <div>
-                    <input type="checkbox" checked> Artificial intelligence
-                    <div><input type="checkbox" checked> AAAI</div>
-                    <div><input type="checkbox"> ICAPS</div>
-                    <div><input type="checkbox" checked> IJCAI</div>
-                    <div><input type="checkbox"> KR</div>
+                <div class="parent-area-row theme-ai">
+                    <input type="hidden" checked> <span class="parent-area-label">AI</span>
                 </div>
 
-                <div>
-                    <input type="checkbox" checked> Computer vision
-                    <div><input type="checkbox" checked> CVPR</div>
-                    <div><input type="checkbox" checked> ECCV</div>
-                    <div><input type="checkbox" checked> ICCV</div>
+                <details class="area-block theme-ai">
+                    <summary><input type="hidden" checked> <span class="area-label">Artificial intelligence</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">AAAI</span></div>
+                    <div class="conference-row"><input type="hidden"> <span class="conference-label">ICAPS</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">IJCAI</span></div>
+                    <div class="conference-row"><input type="hidden"> <span class="conference-label">KR</span></div>
+                </details>
+
+                <details class="area-block theme-ai">
+                    <summary><input type="hidden" checked> <span class="area-label">Computer vision</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">CVPR</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">ECCV</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">ICCV</span></div>
+                </details>
+
+                <details class="area-block theme-ai">
+                    <summary><input type="hidden" checked> <span class="area-label">Machine learning</span></summary>
+                    <div class="conference-row"><input type="hidden"> <span class="conference-label">ICDM</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">ICLR</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">ICML</span></div>
+                    <div class="conference-row"><input type="hidden"> <span class="conference-label">KDD</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">NeurIPS</span></div>
+                </details>
+
+                <details class="area-block theme-ai">
+                    <summary><input type="hidden" checked> <span class="area-label">Natural language processing</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">ACL</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">EMNLP</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">NAACL</span></div>
+                </details>
+
+                <details class="area-block theme-ai">
+                    <summary><input type="hidden" checked> <span class="area-label">The Web &amp; information retrieval</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">SIGIR</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">WWW</span></div>
+                </details>
+
+                <div class="parent-area-row theme-systems">
+                    <input type="hidden" checked> <span class="parent-area-label">Systems</span>
                 </div>
 
-                <div>
-                    <input type="checkbox" checked> Machine learning
-                    <div><input type="checkbox"> ICDM</div>
-                    <div><input type="checkbox" checked> ICLR</div>
-                    <div><input type="checkbox" checked> ICML</div>
-                    <div><input type="checkbox"> KDD</div>
-                    <div><input type="checkbox" checked> NeurIPS</div>
+                <details class="area-block theme-systems">
+                    <summary><input type="hidden" checked> <span class="area-label">Computer architecture</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">ASPLOS</span></div>
+                    <div class="conference-row"><input type="hidden"> <span class="conference-label">HPCA</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">ISCA</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">MICRO</span></div>
+                </details>
+
+                <details class="area-block theme-systems">
+                    <summary><input type="hidden" checked> <span class="area-label">Computer networks</span></summary>
+                    <div class="conference-row"><input type="hidden"> <span class="conference-label">INFOCOM</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">SIGCOMM</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">NSDI</span></div>
+                </details>
+
+                <details class="area-block theme-systems">
+                    <summary><input type="hidden" checked> <span class="area-label">Computer security</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">CCS</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">IEEE S&amp;P</span></div>
+                    <div class="conference-row"><input type="hidden"> <span class="conference-label">NDSS</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">USENIX Security</span></div>
+                </details>
+
+                <details class="area-block theme-systems">
+                    <summary><input type="hidden" checked> <span class="area-label">Databases</span></summary>
+                    <div class="conference-row"><input type="hidden"> <span class="conference-label">ICDE</span></div>
+                    <div class="conference-row"><input type="hidden"> <span class="conference-label">PODS</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">SIGMOD</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">VLDB</span></div>
+                </details>
+
+                <details class="area-block theme-systems">
+                    <summary><input type="hidden" checked> <span class="area-label">Design automation</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">DAC</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">ICCAD</span></div>
+                </details>
+
+                <details class="area-block theme-systems">
+                    <summary><input type="hidden" checked> <span class="area-label">Embedded &amp; real-time systems</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">EMSOFT</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">RTAS</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">RTSS</span></div>
+                </details>
+
+                <details class="area-block theme-systems">
+                    <summary><input type="hidden" checked> <span class="area-label">High-performance computing</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">HPDC</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">ICS</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">SC</span></div>
+                </details>
+
+                <details class="area-block theme-systems">
+                    <summary><input type="hidden" checked> <span class="area-label">Mobile computing</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">MobiCom</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">MobiSys</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">SenSys</span></div>
+                </details>
+
+                <details class="area-block theme-systems">
+                    <summary><input type="hidden" checked> <span class="area-label">Measurement &amp; perf. analysis</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">IMC</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">SIGMETRICS</span></div>
+                </details>
+
+                <details class="area-block theme-systems">
+                    <summary><input type="hidden" checked> <span class="area-label">Operating systems</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">OSDI</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">SOSP</span></div>
+                </details>
+
+                <details class="area-block theme-systems">
+                    <summary><input type="hidden" checked> <span class="area-label">Programming languages</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">PLDI</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">POPL</span></div>
+                </details>
+
+                <details class="area-block theme-systems">
+                    <summary><input type="hidden" checked> <span class="area-label">Software engineering</span></summary>
+                    <div class="conference-row"><input type="hidden"> <span class="conference-label">ASE</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">FSE</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">ICSE</span></div>
+                    <div class="conference-row"><input type="hidden"> <span class="conference-label">ISSTA</span></div>
+                </details>
+
+                <div class="parent-area-row theme-theory">
+                    <input type="hidden" checked> <span class="parent-area-label">Theory</span>
                 </div>
 
-                <div>
-                    <input type="checkbox" checked> Natural language processing
-                    <div><input type="checkbox" checked> ACL</div>
-                    <div><input type="checkbox" checked> EMNLP</div>
-                    <div><input type="checkbox" checked> NAACL</div>
+                <details class="area-block theme-theory">
+                    <summary><input type="hidden" checked> <span class="area-label">Algorithms &amp; complexity</span></summary>
+                    <div class="conference-row"><input type="hidden"> <span class="conference-label">COLT</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">FOCS</span></div>
+                    <div class="conference-row"><input type="hidden"> <span class="conference-label">ICALP</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">SODA</span></div>
+                    <div class="conference-row"><input type="hidden"> <span class="conference-label">SoCG</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">STOC</span></div>
+                </details>
+
+                <details class="area-block theme-theory">
+                    <summary><input type="hidden" checked> <span class="area-label">Cryptography</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">CRYPTO</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">EuroCrypt</span></div>
+                </details>
+
+                <details class="area-block theme-theory">
+                    <summary><input type="hidden" checked> <span class="area-label">Logic &amp; verification</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">CAV</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">LICS</span></div>
+                </details>
+
+                <div class="parent-area-row theme-interdisciplinary">
+                    <input type="hidden" checked> <span class="parent-area-label">Interdisciplinary Areas</span>
                 </div>
 
-                <div>
-                    <input type="checkbox" checked> The Web & information retrieval
-                    <div><input type="checkbox" checked> SIGIR</div>
-                    <div><input type="checkbox" checked> WWW</div>
-                </div>
-                
-                <input type="checkbox" checked> Systems
+                <details class="area-block theme-interdisciplinary">
+                    <summary><input type="hidden" checked> <span class="area-label">Comp. bio &amp; bioinformatics</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">ISMB</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">RECOMB</span></div>
+                </details>
 
-                <div>
-                    <input type="checkbox" checked> Computer architecture
-                    <div><input type="checkbox" checked> ASPLOS</div>
-                    <div><input type="checkbox"> HPCA</div>
-                    <div><input type="checkbox" checked> ISCA</div>
-                    <div><input type="checkbox" checked> MICRO</div>
-                </div>
+                <details class="area-block theme-interdisciplinary">
+                    <summary><input type="hidden" checked> <span class="area-label">Computer graphics</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">SIGGRAPH</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">SIGGRAPH Asia</span></div>
+                </details>
 
-                <div>
-                    <input type="checkbox" checked> Computer networks
-                    <div><input type="checkbox"> INFOCOM</div>
-                    <div><input type="checkbox" checked> SIGCOMM</div>
-                    <div><input type="checkbox" checked> NSDI</div>
-                </div>
+                <details class="area-block theme-interdisciplinary">
+                    <summary><input type="hidden" checked> <span class="area-label">Computer science education</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">SIGCSE</span></div>
+                </details>
 
-                <div>
-                    <input type="checkbox" checked> Computer security
-                    <div><input type="checkbox" checked> CCS</div>
-                    <div><input type="checkbox" checked> IEEE S&P</div>
-                    <div><input type="checkbox"> NDSS</div>
-                    <div><input type="checkbox" checked> USENIX Security</div>
-                </div>
-                
-                <div>
-                    <input type="checkbox" checked> Databases
-                    <div><input type="checkbox"> ICDE</div>
-                    <div><input type="checkbox"> PODS</div>
-                    <div><input type="checkbox" checked> SIGMOD</div>
-                    <div><input type="checkbox" checked> VLDB</div>
-                </div>
+                <details class="area-block theme-interdisciplinary">
+                    <summary><input type="hidden" checked> <span class="area-label">Economics &amp; computation</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">EC</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">WINE</span></div>
+                </details>
 
-                <div>
-                    <input type="checkbox" checked> Design automation
-                    <div><input type="checkbox" checked> DAC</div>
-                    <div><input type="checkbox" checked> ICCAD</div>
-                </div>
+                <details class="area-block theme-interdisciplinary">
+                    <summary><input type="hidden" checked> <span class="area-label">Human-computer interaction</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">CHI</span></div>
+                    <div class="conference-row"><input type="hidden"> <span class="conference-label">PERCOM</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">UbiComp</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">UIST</span></div>
+                </details>
 
-                <div>
-                    <input type="checkbox" checked> Embedded & real-time systems
-                    <div><input type="checkbox" checked> EMSOFT</div>
-                    <div><input type="checkbox" checked> RTAS</div>
-                    <div><input type="checkbox" checked> RTSS</div>
-                </div>
+                <details class="area-block theme-interdisciplinary">
+                    <summary><input type="hidden" checked> <span class="area-label">Robotics</span></summary>
+                    <div class="conference-row"><input type="hidden"> <span class="conference-label">HRI</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">ICRA</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">IROS</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">RSS</span></div>
+                </details>
 
-                <div>
-                    <input type="checkbox" checked> High-performance computing
-                    <div><input type="checkbox" checked> HPDC</div>
-                    <div><input type="checkbox" checked> ICS</div>
-                    <div><input type="checkbox" checked> SC</div>
-                </div>
-
-                <div>
-                    <input type="checkbox" checked> Mobile computing
-                    <div><input type="checkbox" checked> MobiCom</div>
-                    <div><input type="checkbox" checked> MobiSys</div>
-                    <div><input type="checkbox" checked> SenSys</div>
-                </div>
-
-                <div>
-                    <input type="checkbox" checked> Measurement & perf. analysis
-                    <div><input type="checkbox" checked> IMC</div>
-                    <div><input type="checkbox" checked> SIGMETRICS</div>
-                </div>
-
-                <div>
-                    <input type="checkbox" checked> Operating systems
-                    <div><input type="checkbox" checked> OSDI</div>
-                    <div><input type="checkbox" checked> SOSP</div>
-                </div>
-
-                <div>
-                    <input type="checkbox" checked> Programming languages
-                    <div><input type="checkbox" checked> PLDI</div>
-                    <div><input type="checkbox" checked> POPL</div>
-                </div>
-
-                <div>
-                    <input type="checkbox" checked> Software engineering
-                    <div><input type="checkbox"> ASE</div>
-                    <div><input type="checkbox" checked> FSE</div>
-                    <div><input type="checkbox" checked> ICSE</div>
-                    <div><input type="checkbox"> ISSTA</div>
-                </div>
-                <input type="checkbox" checked> Theory
-
-                <div>
-                    <input type="checkbox" checked> Algorithms & complexity
-                    <div><input type="checkbox"> COLT</div>
-                    <div><input type="checkbox" checked> FOCS</div>
-                    <div><input type="checkbox"> ICALP</div>
-                    <div><input type="checkbox" checked> SODA</div>
-                    <div><input type="checkbox"> SoCG</div>
-                    <div><input type="checkbox" checked> STOC</div>
-                </div>
-
-                <div>
-                    <input type="checkbox" checked> Cryptography
-                    <div><input type="checkbox" checked> CRYPTO</div>
-                    <div><input type="checkbox" checked> EuroCrypt</div>
-                </div>
-
-                <div>
-                    <input type="checkbox" checked> Logic & verification
-                    <div><input type="checkbox" checked> CAV</div>
-                    <div><input type="checkbox" checked> LICS</div>
-                </div>
-                <input type="checkbox" checked> Interdisciplinary Areas
-
-                <div>
-                    <input type="checkbox" checked> Comp. bio & bioinformatics
-                    <div><input type="checkbox" checked> ISMB</div>
-                    <div><input type="checkbox" checked> RECOMB</div>
-                </div>
-
-                <div>
-                    <input type="checkbox" checked> Computer graphics
-                    <div><input type="checkbox" checked> SIGGRAPH</div>
-                    <div><input type="checkbox" checked> SIGGRAPH Asia</div>
-                </div>
-
-                <div>
-                    <input type="checkbox" checked> Computer science education
-                    <div><input type="checkbox" checked> SIGCSE</div>
-                </div>
-
-                <div>
-                    <input type="checkbox" checked> Economics & computation
-                    <div><input type="checkbox" checked> EC</div>
-                    <div><input type="checkbox" checked> WINE</div>
-                </div>
-
-                <div>
-                    <input type="checkbox" checked> Human-computer interaction
-                    <div><input type="checkbox" checked> CHI</div>
-                    <div><input type="checkbox"> PERCOM</div>
-                    <div><input type="checkbox" checked> UbiComp</div>
-                    <div><input type="checkbox" checked> UIST</div>
-                </div>
-
-                <div>
-                    <input type="checkbox" checked> Robotics
-                    <div><input type="checkbox"> HRI</div>
-                    <div><input type="checkbox" checked> ICRA</div>
-                    <div><input type="checkbox" checked> IROS</div>
-                    <div><input type="checkbox" checked> RSS</div>
-                </div>
-
-                <div>
-                    <input type="checkbox" checked> Visualization
-                    <div><input type="checkbox" checked> VIS</div>
-                    <div><input type="checkbox" checked> VR</div>
-                </div>
+                <details class="area-block theme-interdisciplinary">
+                    <summary><input type="hidden" checked> <span class="area-label">Visualization</span></summary>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">VIS</span></div>
+                    <div class="conference-row"><input type="hidden" checked> <span class="conference-label">VR</span></div>
+                </details>
             </div>
         </div>
 

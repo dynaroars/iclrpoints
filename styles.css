@@ -93,29 +93,83 @@ footer a:hover {
 }
 
 #checkboxes {
-    max-height: 600px;
-    overflow-y: auto;
     border: 1px solid #ddd;
     padding: 10px;
     border-radius: 4px;
 }
 
-#checkboxes input[type="checkbox"] {
-    margin-right: 5px;
-    pointer-events: none;
-    opacity: 0.35;
-    filter: grayscale(100%);
-    cursor: not-allowed;
+#checkboxes input[type="hidden"] {
+    display: none;
 }
 
-#checkboxes > div {
-    margin-left: 20px;
-    margin-top: 5px;
+:root {
+    --ai-rgb: 31, 119, 180;
+    --systems-rgb: 255, 127, 14;
+    --theory-rgb: 44, 160, 44;
+    --interdisciplinary-rgb: 148, 103, 189;
 }
 
-#checkboxes > input {
-    font-weight: bold;
-    margin-top: 10px;
+.theme-ai { --theme-rgb: var(--ai-rgb); }
+.theme-systems { --theme-rgb: var(--systems-rgb); }
+.theme-theory { --theme-rgb: var(--theory-rgb); }
+.theme-interdisciplinary { --theme-rgb: var(--interdisciplinary-rgb); }
+
+#checkboxes .parent-area-row {
+    margin-top: 8px;
+    padding: 5px 8px;
+    border-radius: 6px;
+    background: rgba(var(--theme-rgb, 59, 104, 156), 0.20);
+    border: 1px solid rgba(var(--theme-rgb, 59, 104, 156), 0.55);
+}
+
+#checkboxes .parent-area-label {
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    color: rgba(var(--theme-rgb, 20, 39, 58), 0.95);
+}
+
+#checkboxes .area-block {
+    margin-left: 16px;
+    margin-top: 3px;
+    padding: 2px 0 2px 8px;
+    border-left: none;
+}
+
+#checkboxes .area-block > summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+}
+
+#checkboxes .area-block > summary::-webkit-details-marker {
+    display: none;
+}
+
+#checkboxes .area-block > summary::before {
+    content: "▸";
+    width: 1em;
+    display: inline-block;
+    color: rgba(var(--theme-rgb, 20, 39, 58), 0.85);
+    transform: translateY(-0.5px);
+}
+
+#checkboxes .area-block[open] > summary::before {
+    content: "▾";
+}
+
+#checkboxes .area-label {
+    font-weight: 600;
+    color: rgba(var(--theme-rgb, 31, 45, 58), 0.95);
+}
+
+#checkboxes .conference-row {
+    margin-left: 18px;
+    margin-top: 1px;
+    font-size: 0.92em;
+    color: rgba(var(--theme-rgb, 59, 75, 92), 0.88);
 }
 
 footer {
