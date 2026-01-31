@@ -92,6 +92,42 @@ footer a:hover {
     flex-direction: column;
 }
 
+.baseline-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.baseline-row select {
+    width: 180px;
+}
+
+.toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    color: #1f2d3a;
+    user-select: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: rgba(255, 255, 255, 0.75);
+}
+
+.toggle input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+}
+
+.toggle.is-disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
 #checkboxes {
     border: 1px solid #ddd;
     padding: 10px;
