@@ -184,7 +184,6 @@ function computeConferenceICLRPoints(fromYear, toYear, baselineConference) {
             }
             aggregatedFacultySetsByConf[conf] = Array.from(existingSet);
 
-            // Keep mapping available even if JSON doesn't include it
             if (!conferenceToArea[conf] && data.area) {
                 conferenceToArea[conf] = data.area;
             }
@@ -328,6 +327,9 @@ function updateChart(fromYear, toYear) {
             '<extra></extra>';
     }
 
+    var textPosition = 'inside';
+    var textFontSize = conferenceView ? 12 : 20;
+
     var trace = {
         type: "bar",
         x: values,
@@ -342,11 +344,13 @@ function updateChart(fromYear, toYear) {
             opacity: 0.95
         },
         text: values.map(function(v) { return v.toFixed(2); }),
-        textposition: 'inside',
+        textposition: textPosition,
         insidetextanchor: 'start',
+        constraintext: 'none',
+        cliponaxis: false,
         textfont: { 
             color: '#2c3e50', 
-            size: 20,
+            size: textFontSize,
             family: 'Arial, sans-serif'
         },
         customdata: customdata,
@@ -363,9 +367,15 @@ function updateChart(fromYear, toYear) {
         }
     };
 
+    var rowCount = areas.length || 1;
+    var perRowPx = conferenceView ? 18 : 24; // conference view tends to have many more rows
+    var minHeight = 760;
+    var paddingPx = 220;
+    var dynamicHeight = Math.max(minHeight, Math.round(rowCount * perRowPx + paddingPx));
+
     var layout = {
         width: 760,
-        height: 760,
+        height: dynamicHeight,
         margin: { l: 230, r: 120, t: 50, b: 20 },
         bargap: 0.2,
         title: {
@@ -433,24 +443,26 @@ function updateChart(fromYear, toYear) {
         showTips: false
     };
 
-    if (document.getElementById("chart").data) {
-        Plotly.animate("chart", {
-            data: [trace],
-            layout: layout,
-            transition: {
-                duration: 500,
-                easing: 'cubic-in-out'
-            },
-            frame: {
-                duration: 500
-            }
-        }, config);
+    var chartEl = document.getElementById("chart");
+    if (chartEl && chartEl.data) {
+        var prevLen = (chartEl.data[0] && chartEl.data[0].y && chartEl.data[0].y.length) ? chartEl.data[0].y.length : 0;
+        var nextLen = areas.length;
+
+        // When switching between area view and conference view the number of bars changes;
+        // Plotly.animate can get flaky with length changes, so fall back to react.
+        if (prevLen !== nextLen) {
+            Plotly.react("chart", [trace], layout, config);
+        } else {
+            Plotly.animate("chart",
+                { data: [trace], layout: layout },
+                { transition: { duration: 500, easing: 'cubic-in-out' }, frame: { duration: 500 } }
+            );
+        }
     } else {
         Plotly.newPlot("chart", [trace], layout, config);
     }
         })
         .catch(function(error) {
-            console.error("Error loading data:", error);
         });
 }
 
@@ -472,9 +484,7 @@ function setup(){
             var yrs = getYearsFromInput();
             updateChart(yrs.from, yrs.to);
         })
-        .catch(function(error) {
-            console.error("Error loading data:", error);
-        });
+        .catch(function(error) {});
 
     var from = document.getElementById("from-year");
     var to = document.getElementById("to-year");

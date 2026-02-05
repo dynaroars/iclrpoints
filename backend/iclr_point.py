@@ -97,7 +97,6 @@ def get_cached_dblp_data(conf_to_area, faculty_set):
 def get_cached_dblp_conf_data(conf_to_area, faculty_set):
     global _dblp_conf_cache
     if _dblp_conf_cache is None:
-        # populates both caches
         get_cached_dblp_data(conf_to_area, faculty_set)
     return _dblp_conf_cache
 

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import json
 import sys
 from backend.iclr_point import (
