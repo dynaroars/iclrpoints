@@ -329,7 +329,7 @@ function updateChart(fromYear, toYear) {
     }
 
     var textPosition = 'inside';
-    var textFontSize = conferenceView ? 12 : 20;
+    var textFontSize = conferenceView ? 11 : 16;
 
     var trace = {
         type: "bar",
@@ -369,10 +369,11 @@ function updateChart(fromYear, toYear) {
     };
 
     var rowCount = areas.length || 1;
-    var perRowPx = conferenceView ? 18 : 24; // conference view tends to have many more rows
+    var perRowPx = conferenceView ? 18 : 24;
     var minHeight = 760;
     var paddingPx = 220;
     var dynamicHeight = Math.max(minHeight, Math.round(rowCount * perRowPx + paddingPx));
+    var xMax = values.length ? Math.max(2, Math.max.apply(null, values) * 1.08) : 7;
 
     var layout = {
         width: 760,
@@ -393,7 +394,7 @@ function updateChart(fromYear, toYear) {
         },
 
         xaxis: {
-          range: [0, 7],
+          range: [0, xMax],
           autorange: false,
           fixedrange: true,
           dtick: 1,
