@@ -5,17 +5,18 @@ function populateYearDropdowns() {
     var toSelect = document.getElementById("to-year");
     var currentYear = new Date().getFullYear();
     
+    var defaultFrom = currentYear - 10;
     for (var year = 1970; year <= currentYear; year++) {
         var option1 = document.createElement("option");
         option1.value = year;
         option1.text = year;
-        if (year === 2019) option1.selected = true;
+        if (year === defaultFrom) option1.selected = true;
         fromSelect.appendChild(option1);
         
         var option2 = document.createElement("option");
         option2.value = year;
         option2.text = year;
-        if (year === 2023) option2.selected = true;
+        if (year === currentYear) option2.selected = true;
         toSelect.appendChild(option2);
     }
 }
@@ -323,8 +324,9 @@ function updateChart(fromYear, toYear) {
 function getYearsFromInput() {
     var fromYear = parseInt(document.getElementById("from-year").value);
     var toYear = parseInt(document.getElementById("to-year").value);
-    if (isNaN(fromYear)) fromYear = 2019;
-    if (isNaN(toYear)) toYear = 2023;
+    var currentYear = new Date().getFullYear();
+    if (isNaN(fromYear)) fromYear = currentYear - 10;
+    if (isNaN(toYear)) toYear = currentYear;
     return { from: fromYear, to: toYear};
 }
 
