@@ -6,6 +6,7 @@ AREA_PATH = "data/area.csv"
 DBLP_PATH = "data/dblp.xml.gz"
 
 _dblp_cache = None
+_dblp_conf_cache = None
 
 def load_faculty_names(csrankings_path):
     faculty_set = set()
@@ -32,6 +33,7 @@ def load_conference_to_area(area_path):
 
 def parse_dblp_full(dblp_path, conf_to_area, faculty_set):
     year_area_data = {}
+    year_conf_data = {}
     
     with gzip.open(dblp_path, "rb") as dblp_file:
         context = ET.iterparse(dblp_file, events=("end",))
@@ -53,9 +55,11 @@ def parse_dblp_full(dblp_path, conf_to_area, faculty_set):
                     continue
 
                 area = None
+                conference = None
                 for conf, conf_area in conf_to_area.items():
                     if conf in booktitle:
                         area = conf_area
+                        conference = conf
                         break
 
                 if area:
@@ -66,20 +70,35 @@ def parse_dblp_full(dblp_path, conf_to_area, faculty_set):
                     
                     year_area_data[year][area]["publication_count"] += 1
 
+                    if conference:
+                        if year not in year_conf_data:
+                            year_conf_data[year] = {}
+                        if conference not in year_conf_data[year]:
+                            year_conf_data[year][conference] = {"publication_count": 0, "faculty_names": set()}
+                        year_conf_data[year][conference]["publication_count"] += 1
+
                     for author_elem in elem.findall("author"):
                         author_name = author_elem.text
                         if author_name and author_name in faculty_set:
                             year_area_data[year][area]["faculty_names"].add(author_name)
+                            if conference:
+                                year_conf_data[year][conference]["faculty_names"].add(author_name)
                             
             root.clear()
     
-    return year_area_data
+    return year_area_data, year_conf_data
 
 def get_cached_dblp_data(conf_to_area, faculty_set):
-    global _dblp_cache
+    global _dblp_cache, _dblp_conf_cache
     if _dblp_cache is None:
-        _dblp_cache = parse_dblp_full(DBLP_PATH, conf_to_area, faculty_set)
+        _dblp_cache, _dblp_conf_cache = parse_dblp_full(DBLP_PATH, conf_to_area, faculty_set)
     return _dblp_cache
+
+def get_cached_dblp_conf_data(conf_to_area, faculty_set):
+    global _dblp_conf_cache
+    if _dblp_conf_cache is None:
+        get_cached_dblp_data(conf_to_area, faculty_set)
+    return _dblp_conf_cache
 
 def compute_fractional_faculty(area_to_faculty):
     faculty_to_areas = {}
