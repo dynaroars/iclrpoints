@@ -249,9 +249,10 @@ function updateChart(fromYear, toYear) {
         },
 
         xaxis: {
-          range: [-0.1, 6],
+          range: [0, 7],
           autorange: false,
           fixedrange: true,
+          dtick: 1,
           showgrid: true,
           gridcolor: "rgba(0,0,0,0.06)",
           gridwidth: 1,
@@ -274,7 +275,7 @@ function updateChart(fromYear, toYear) {
               color: '#2c3e50',
               family: 'Arial, sans-serif'
           },
-          automargin: false,
+          automargin: true,
           showgrid: false,
           showline: true,
           mirror: true,
