@@ -329,7 +329,7 @@ function updateChart(fromYear, toYear) {
     }
 
     var textPosition = 'inside';
-    var textFontSize = conferenceView ? 11 : 16;
+    var textFontSize = conferenceView ? 14 : 16;
 
     var trace = {
         type: "bar",
@@ -369,7 +369,7 @@ function updateChart(fromYear, toYear) {
     };
 
     var rowCount = areas.length || 1;
-    var perRowPx = conferenceView ? 18 : 24;
+    var perRowPx = conferenceView ? 24 : 24;
     var minHeight = 760;
     var paddingPx = 220;
     var dynamicHeight = Math.max(minHeight, Math.round(rowCount * perRowPx + paddingPx));
@@ -379,7 +379,7 @@ function updateChart(fromYear, toYear) {
         width: 760,
         height: dynamicHeight,
         margin: { l: 230, r: 120, t: 50, b: 20 },
-        bargap: 0.2,
+        bargap: conferenceView ? 0.35 : 0.2,
         title: {
             text: conferenceView ? ('ICLR Points (Conferences; baseline: ' + BASELINE_CONFERENCE + ')') : 'ICLR Points',
             font: {
