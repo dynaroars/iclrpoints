@@ -381,7 +381,7 @@ function updateChart(fromYear, toYear) {
         margin: { l: 230, r: 120, t: 50, b: 20 },
         bargap: conferenceView ? 0.35 : 0.2,
         title: {
-            text: 'ICLR Points',
+            text: (conferenceView ? BASELINE_CONFERENCE : baselineArea) + ' Points',
             font: {
                 size: 18,
                 color: '#2c3e50',
