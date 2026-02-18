@@ -41,6 +41,29 @@ function populateBaselineDropdown(areas) {
     }
 }
 
+function getAvailableConferences() {
+    if (!perYearData || !perYearData.years_by_conference) return [];
+    var set = {};
+    for (var yearStr in perYearData.years_by_conference) {
+        var yearData = perYearData.years_by_conference[yearStr];
+        for (var conf in yearData) set[conf] = true;
+    }
+    return Object.keys(set).sort();
+}
+
+function populateBaselineConferenceDropdown(conferences) {
+    var select = document.getElementById("baseline-conference-dropbox");
+    if (!select) return;
+    select.innerHTML = "";
+    for (var i = 0; i < conferences.length; i++) {
+        var option = document.createElement("option");
+        option.value = conferences[i];
+        option.text = conferences[i];
+        if (conferences[i] === BASELINE_CONFERENCE) option.selected = true;
+        select.appendChild(option);
+    }
+}
+
 function loadPerYearData() {
     if (perYearData !== null) {
         return Promise.resolve(perYearData);
@@ -238,25 +261,34 @@ function getICLRPointsData(fromYear, toYear, baselineArea) {
         });
 }
 
-function getConferencePointsData(fromYear, toYear) {
+function getConferencePointsData(fromYear, toYear, baselineConference) {
+    var baseline = baselineConference || BASELINE_CONFERENCE;
     return loadPerYearData()
         .then(function() {
-            return computeConferenceICLRPoints(fromYear, toYear, BASELINE_CONFERENCE);
+            return computeConferenceICLRPoints(fromYear, toYear, baseline);
         });
 }
 
 function updateChart(fromYear, toYear) {
     var conferenceView = isConferenceViewEnabled();
     var baselineSelect = document.getElementById("baseline-dropbox");
+    var baselineConferenceSelect = document.getElementById("baseline-conference-dropbox");
     if (baselineSelect) {
         baselineSelect.disabled = conferenceView;
-        baselineSelect.title = conferenceView ? ("Baseline fixed to " + BASELINE_CONFERENCE + " in conference view") : "";
+        baselineSelect.style.display = conferenceView ? "none" : "";
+        baselineSelect.title = conferenceView ? "" : "";
+    }
+    if (baselineConferenceSelect) {
+        baselineConferenceSelect.style.display = conferenceView ? "" : "none";
+        baselineConferenceSelect.disabled = !conferenceView;
     }
 
     var dataPromise;
     var baselineArea = "Machine learning";
+    var baselineConference = BASELINE_CONFERENCE;
     if (conferenceView) {
-        dataPromise = getConferencePointsData(fromYear, toYear);
+        baselineConference = (baselineConferenceSelect && baselineConferenceSelect.value) || BASELINE_CONFERENCE;
+        dataPromise = getConferencePointsData(fromYear, toYear, baselineConference);
     } else {
         baselineArea = (baselineSelect && baselineSelect.value) || "Machine learning";
         dataPromise = getICLRPointsData(fromYear, toYear, baselineArea);
@@ -316,8 +348,8 @@ function updateChart(fromYear, toYear) {
             'Area: %{customdata[2]}<br>' +
             'Faculty: %{customdata[0]}<br>' +
             'Publications: %{customdata[1]}<br>' +
-            'ICLR Points: %{x:.2f}<br>' +
-            'Baseline: ' + BASELINE_CONFERENCE + '<br>' +
+            'Points: %{x:.2f}<br>' +
+            'Baseline: ' + baselineConference + '<br>' +
             '<extra></extra>';
     } else {
         hovertemplate = '<b>%{y}</b><br>' +
@@ -381,7 +413,7 @@ function updateChart(fromYear, toYear) {
         margin: { l: 230, r: 120, t: 50, b: 20 },
         bargap: conferenceView ? 0.35 : 0.2,
         title: {
-            text: (conferenceView ? BASELINE_CONFERENCE : baselineArea) + ' Points',
+            text: (conferenceView ? baselineConference : baselineArea) + ' Points',
             font: {
                 size: 18,
                 color: '#2c3e50',
@@ -485,6 +517,12 @@ function setup(){
             if (data.available_areas && data.available_areas.length > 0) {
                 populateBaselineDropdown(data.available_areas);
             }
+            if (data.years_by_conference) {
+                var conferences = getAvailableConferences();
+                if (conferences.length > 0) {
+                    populateBaselineConferenceDropdown(conferences);
+                }
+            }
             var yrs = getYearsFromInput();
             updateChart(yrs.from, yrs.to);
         })
@@ -506,6 +544,14 @@ function setup(){
         var yrs = getYearsFromInput();
         updateChart(yrs.from, yrs.to);
     });
+
+    var baselineConferenceSelect = document.getElementById("baseline-conference-dropbox");
+    if (baselineConferenceSelect) {
+        baselineConferenceSelect.addEventListener("change", function(){
+            var yrs = getYearsFromInput();
+            updateChart(yrs.from, yrs.to);
+        });
+    }
 
     var conferenceToggle = document.getElementById("conference-view-toggle");
     if (conferenceToggle) {
