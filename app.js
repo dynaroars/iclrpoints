@@ -498,7 +498,7 @@ function updateChart(fromYear, toYear) {
     var xMax = values.length ? Math.max(2, Math.max.apply(null, values) * 1.08) : 7;
 
     var layout = {
-        width: 760,
+        width: 960,
         height: dynamicHeight,
         margin: { l: 230, r: 120, t: 50, b: 20 },
         bargap: conferenceView ? 0.35 : 0.2,
@@ -668,7 +668,7 @@ function renderTrendChart(trendData) {
     yMax = Math.max(2, (yMax || 1) * 1.08);
 
     var layout = {
-        width: 760,
+        width: 960,
         height: 600,
         margin: { l: 80, r: 140, t: 60, b: 60 },
         title: {
