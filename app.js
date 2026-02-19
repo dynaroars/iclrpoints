@@ -6,6 +6,11 @@ function isConferenceViewEnabled() {
     return !!(el && el.checked);
 }
 
+function isTrendViewEnabled() {
+    var el = document.getElementById("trend-view-toggle");
+    return !!(el && el.checked);
+}
+
 function populateYearDropdowns() {
     var fromSelect = document.getElementById("from-year");
     var toSelect = document.getElementById("to-year");
@@ -177,6 +182,62 @@ function computeICLRPoints(fromYear, toYear, baselineArea) {
     return results;
 }
 
+function computeICLRPointsTrend(fromYear, toYear, baselineArea) {
+    if (!perYearData) {
+        throw new Error("Data not loaded");
+    }
+    var years = [];
+    var areaToPointsByYear = {};
+    var parentOrder = ["AI", "Systems", "Theory", "Interdisciplinary Areas"];
+
+    for (var year = fromYear; year <= toYear; year++) {
+        var yearStr = String(year);
+        if (!perYearData.years[yearStr]) continue;
+
+        var yearData = perYearData.years[yearStr];
+        var areaToFaculty = {};
+        var areaToPublicationCount = {};
+
+        for (var area in yearData) {
+            var data = yearData[area];
+            areaToFaculty[area] = data.faculty_names;
+            areaToPublicationCount[area] = data.publication_count;
+        }
+
+        var areaToFractionalFacultyCount = computeFractionalFaculty(areaToFaculty);
+        var baselineFractionalFacultyCount = areaToFractionalFacultyCount[baselineArea];
+        var baselinePublicationCount = areaToPublicationCount[baselineArea];
+
+        if (!baselineFractionalFacultyCount || !baselinePublicationCount || baselinePublicationCount === 0) {
+            continue;
+        }
+
+        var baseline = baselineFractionalFacultyCount / baselinePublicationCount;
+        years.push(year);
+
+        for (var area in areaToPublicationCount) {
+            var pubCount = areaToPublicationCount[area];
+            var fracFaculty = areaToFractionalFacultyCount[area] || 0;
+            if (pubCount === 0) continue;
+
+            var facultyPerPub = fracFaculty / pubCount;
+            var iclrPoints = Math.round((facultyPerPub / baseline) * 100) / 100;
+
+            if (!areaToPointsByYear[area]) areaToPointsByYear[area] = {};
+            areaToPointsByYear[area][year] = iclrPoints;
+        }
+    }
+
+    var areas = Object.keys(areaToPointsByYear).sort();
+    var result = {
+        years: years,
+        areas: areas,
+        areaToPointsByYear: areaToPointsByYear,
+        baselineArea: baselineArea
+    };
+    return result;
+}
+
 function computeConferenceICLRPoints(fromYear, toYear, baselineConference) {
     if (!perYearData) {
         throw new Error("Data not loaded");
@@ -261,6 +322,13 @@ function getICLRPointsData(fromYear, toYear, baselineArea) {
         });
 }
 
+function getICLRPointsTrendData(fromYear, toYear, baselineArea) {
+    return loadPerYearData()
+        .then(function() {
+            return computeICLRPointsTrend(fromYear, toYear, baselineArea);
+        });
+}
+
 function getConferencePointsData(fromYear, toYear, baselineConference) {
     var baseline = baselineConference || BASELINE_CONFERENCE;
     return loadPerYearData()
@@ -271,8 +339,11 @@ function getConferencePointsData(fromYear, toYear, baselineConference) {
 
 function updateChart(fromYear, toYear) {
     var conferenceView = isConferenceViewEnabled();
+    var trendView = isTrendViewEnabled();
     var baselineSelect = document.getElementById("baseline-dropbox");
     var baselineConferenceSelect = document.getElementById("baseline-conference-dropbox");
+    var trendToggleLabel = document.getElementById("trend-toggle-label");
+
     if (baselineSelect) {
         baselineSelect.disabled = conferenceView;
         baselineSelect.style.display = conferenceView ? "none" : "";
@@ -282,20 +353,39 @@ function updateChart(fromYear, toYear) {
         baselineConferenceSelect.style.display = conferenceView ? "" : "none";
         baselineConferenceSelect.disabled = !conferenceView;
     }
+    if (trendToggleLabel) {
+        trendToggleLabel.style.display = conferenceView ? "none" : "inline-flex";
+        if (conferenceView && trendView) {
+            document.getElementById("trend-view-toggle").checked = false;
+        }
+    }
 
     var dataPromise;
     var baselineArea = "Machine learning";
     var baselineConference = BASELINE_CONFERENCE;
+    var useTrendChart = !conferenceView && trendView;
+
     if (conferenceView) {
         baselineConference = (baselineConferenceSelect && baselineConferenceSelect.value) || BASELINE_CONFERENCE;
         dataPromise = getConferencePointsData(fromYear, toYear, baselineConference);
+    } else if (useTrendChart) {
+        baselineArea = (baselineSelect && baselineSelect.value) || "Machine learning";
+        dataPromise = getICLRPointsTrendData(fromYear, toYear, baselineArea);
     } else {
         baselineArea = (baselineSelect && baselineSelect.value) || "Machine learning";
         dataPromise = getICLRPointsData(fromYear, toYear, baselineArea);
     }
 
+    if (useTrendChart) {
+        dataPromise.then(function(trendData) {
+            renderTrendChart(trendData);
+        }).catch(function(error) {});
+        return;
+    }
+
     dataPromise
         .then(function(data){
+
             var parentOrder= ["AI", "Systems", "Theory", "Interdisciplinary Areas"];
             var rows = [];
             if (conferenceView) {
@@ -501,6 +591,145 @@ function updateChart(fromYear, toYear) {
         });
 }
 
+function renderTrendChart(trendData) {
+    var years = trendData.years;
+    var areaToPointsByYear = trendData.areaToPointsByYear;
+    var baselineArea = trendData.baselineArea;
+    var parentOrder = ["AI", "Systems", "Theory", "Interdisciplinary Areas"];
+    var areaToParent = perYearData && perYearData.area_to_parent ? perYearData.area_to_parent : {};
+
+    var colorMap = {
+        "AI": "rgb(31, 119, 180)",
+        "Systems": "rgb(255, 127, 14)",
+        "Theory": "rgb(44, 160, 44)",
+        "Interdisciplinary Areas": "rgb(148, 103, 189)"
+    };
+
+    var parentToPointsByYear = {};
+    for (var yrIdx = 0; yrIdx < years.length; yrIdx++) {
+        var yr = years[yrIdx];
+        var parentSums = {};
+        var parentCounts = {};
+        for (var area in areaToPointsByYear) {
+            var pts = areaToPointsByYear[area][yr];
+            if (pts === undefined) continue;
+            var parent = areaToParent[area] || "";
+            if (!parent) continue;
+            parentSums[parent] = (parentSums[parent] || 0) + pts;
+            parentCounts[parent] = (parentCounts[parent] || 0) + 1;
+        }
+        for (var p in parentSums) {
+            if (!parentToPointsByYear[p]) parentToPointsByYear[p] = {};
+            parentToPointsByYear[p][yr] = Math.round((parentSums[p] / parentCounts[p]) * 100) / 100;
+        }
+    }
+
+    var traces = [];
+    for (var i = 0; i < parentOrder.length; i++) {
+        var parent = parentOrder[i];
+        if (!parentToPointsByYear[parent]) continue;
+        var x = [];
+        var y = [];
+        for (var j = 0; j < years.length; j++) {
+            var yr = years[j];
+            if (parentToPointsByYear[parent][yr] !== undefined) {
+                x.push(yr);
+                y.push(parentToPointsByYear[parent][yr]);
+            }
+        }
+        if (x.length === 0) continue;
+
+        var color = colorMap[parent] || "rgb(150, 150, 150)";
+
+        traces.push({
+            type: "scatter",
+            mode: "lines+markers",
+            name: parent,
+            x: x,
+            y: y,
+            line: { color: color, width: 2.5 },
+            marker: { size: 8 },
+            hovertemplate: "<b>%{fullData.name}</b><br>Year: %{x}<br>Points: %{y:.2f}<br>Baseline: " + baselineArea + "<extra></extra>",
+            hoverlabel: {
+                bgcolor: "rgba(255, 255, 255, 0.95)",
+                bordercolor: "rgba(0, 0, 0, 0.2)",
+                font: { family: "Arial, sans-serif", size: 12, color: "#2c3e50" },
+                namelength: -1
+            }
+        });
+    }
+
+    var yMax = 0;
+    for (var t = 0; t < traces.length; t++) {
+        for (var k = 0; k < traces[t].y.length; k++) {
+            if (traces[t].y[k] > yMax) yMax = traces[t].y[k];
+        }
+    }
+    yMax = Math.max(2, (yMax || 1) * 1.08);
+
+    var layout = {
+        width: 760,
+        height: 600,
+        margin: { l: 80, r: 140, t: 60, b: 60 },
+        title: {
+            text: baselineArea + " Points (Trend)",
+            font: { size: 18, color: "#2c3e50", family: "Arial, sans-serif" },
+            x: 0.5,
+            xanchor: "center",
+            y: 0.98,
+            yanchor: "top"
+        },
+        xaxis: {
+            title: "Year",
+            tickmode: "linear",
+            dtick: years.length > 15 ? 2 : 1,
+            showgrid: true,
+            gridcolor: "rgba(0,0,0,0.06)",
+            zeroline: false,
+            showline: true,
+            mirror: true,
+            linecolor: "rgba(0,0,0,0.3)",
+            tickfont: { size: 11, color: "#7f8c8d", family: "Arial, sans-serif" }
+        },
+        yaxis: {
+            title: "ICLR Points",
+            range: [0, yMax],
+            showgrid: true,
+            gridcolor: "rgba(0,0,0,0.06)",
+            zeroline: true,
+            zerolinecolor: "rgba(0,0,0,0.2)",
+            showline: true,
+            mirror: true,
+            linecolor: "rgba(0,0,0,0.3)",
+            tickfont: { size: 11, color: "#7f8c8d", family: "Arial, sans-serif" }
+        },
+        showlegend: true,
+        legend: {
+            x: 1.02,
+            y: 1,
+            xanchor: "left",
+            yanchor: "top",
+            font: { size: 11, family: "Arial, sans-serif" },
+            bgcolor: "rgba(255,255,255,0.8)",
+            bordercolor: "rgba(0,0,0,0.1)"
+        },
+        paper_bgcolor: "rgba(255, 255, 255, 0)",
+        plot_bgcolor: "rgba(250, 250, 250, 0.3)",
+        hovermode: "closest",
+        font: { family: "Arial, sans-serif" }
+    };
+
+    var config = {
+        displaylogo: false,
+        displayModeBar: false,
+        responsive: true,
+        doubleClick: "reset",
+        showTips: false
+    };
+
+    Plotly.react("chart", traces, layout, config);
+}
+
 function getYearsFromInput() {
     var fromYear = parseInt(document.getElementById("from-year").value);
     var toYear = parseInt(document.getElementById("to-year").value);
@@ -560,6 +789,15 @@ function setup(){
             updateChart(yrs.from, yrs.to);
         });
     }
+
+    var trendToggle = document.getElementById("trend-view-toggle");
+    if (trendToggle) {
+        trendToggle.addEventListener("change", function(){
+            var yrs = getYearsFromInput();
+            updateChart(yrs.from, yrs.to);
+        });
+    }
+
 }
 
 setup();
