@@ -489,7 +489,7 @@ function updateChart(fromYear, toYear) {
         textfont: { 
             color: '#2c3e50', 
             size: textFontSize,
-            family: 'Arial, sans-serif'
+            family: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
         },
         customdata: customdata,
         hovertemplate: hovertemplate,
@@ -497,7 +497,7 @@ function updateChart(fromYear, toYear) {
             bgcolor: 'rgba(255, 255, 255, 0.95)',
             bordercolor: 'rgba(0, 0, 0, 0.2)',
             font: {
-                family: 'Arial, sans-serif',
+                family: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
                 size: 12,
                 color: '#2c3e50'
             },
@@ -522,7 +522,7 @@ function updateChart(fromYear, toYear) {
             font: {
                 size: 18,
                 color: '#2c3e50',
-                family: 'Arial, sans-serif'
+                family: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
             },
             x: 0.5,
             xanchor: 'center',
@@ -546,7 +546,7 @@ function updateChart(fromYear, toYear) {
           tickfont: {
               size: 11,
               color: '#7f8c8d',
-              family: 'Arial, sans-serif'
+              family: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
           }
         },
       
@@ -555,7 +555,7 @@ function updateChart(fromYear, toYear) {
           tickfont: { 
               size: 15,
               color: '#2c3e50',
-              family: 'Arial, sans-serif'
+              family: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
           },
           automargin: true,
           showgrid: false,
@@ -570,7 +570,7 @@ function updateChart(fromYear, toYear) {
         plot_bgcolor: "rgba(250, 250, 250, 0.3)",
         hovermode: 'closest',
         font: {
-            family: 'Arial, sans-serif'
+            family: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
         }
       };
       
@@ -665,7 +665,7 @@ function renderTrendChart(trendData) {
             hoverlabel: {
                 bgcolor: "rgba(255, 255, 255, 0.95)",
                 bordercolor: "rgba(0, 0, 0, 0.2)",
-                font: { family: "Arial, sans-serif", size: 12, color: "#2c3e50" },
+                font: { family: "Inter, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif", size: 12, color: "#2c3e50" },
                 namelength: -1
             }
         });
@@ -685,7 +685,7 @@ function renderTrendChart(trendData) {
         margin: { l: 80, r: 140, t: 60, b: 60 },
         title: {
             text: baselineArea + " Points (Trend)",
-            font: { size: 18, color: "#2c3e50", family: "Arial, sans-serif" },
+            font: { size: 18, color: "#2c3e50", family: "Inter, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif" },
             x: 0.5,
             xanchor: "center",
             y: 0.98,
@@ -701,7 +701,7 @@ function renderTrendChart(trendData) {
             showline: true,
             mirror: true,
             linecolor: "rgba(0,0,0,0.3)",
-            tickfont: { size: 11, color: "#7f8c8d", family: "Arial, sans-serif" }
+            tickfont: { size: 11, color: "#7f8c8d", family: "Inter, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif" }
         },
         yaxis: {
             title: "ICLR Points",
@@ -713,7 +713,7 @@ function renderTrendChart(trendData) {
             showline: true,
             mirror: true,
             linecolor: "rgba(0,0,0,0.3)",
-            tickfont: { size: 11, color: "#7f8c8d", family: "Arial, sans-serif" }
+            tickfont: { size: 11, color: "#7f8c8d", family: "Inter, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif" }
         },
         showlegend: true,
         legend: {
@@ -721,14 +721,14 @@ function renderTrendChart(trendData) {
             y: 1,
             xanchor: "left",
             yanchor: "top",
-            font: { size: 11, family: "Arial, sans-serif" },
+            font: { size: 11, family: "Inter, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif" },
             bgcolor: "rgba(255,255,255,0.8)",
             bordercolor: "rgba(0,0,0,0.1)"
         },
         paper_bgcolor: "rgba(255, 255, 255, 0)",
         plot_bgcolor: "rgba(250, 250, 250, 0.3)",
         hovermode: "closest",
-        font: { family: "Arial, sans-serif" }
+        font: { family: "Inter, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif" }
     };
 
     var config = {
