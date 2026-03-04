@@ -1,5 +1,6 @@
 var perYearData = null;
 var BASELINE_CONFERENCE = "ICLR";
+var DEFAULT_BASELINE_AREA = "Machine learning";
 
 function isConferenceViewEnabled() {
     var el = document.getElementById("conference-view-toggle");
@@ -41,7 +42,7 @@ function populateBaselineDropdown(areas) {
         var option = document.createElement("option");
         option.value = sortedAreas[i];
         option.text = sortedAreas[i];
-        if (sortedAreas[i] === "Machine learning") option.selected = true;
+        if (sortedAreas[i] === DEFAULT_BASELINE_AREA) option.selected = true;
         select.appendChild(option);
     }
 }
@@ -361,7 +362,7 @@ function updateChart(fromYear, toYear) {
     }
 
     var dataPromise;
-    var baselineArea = "Machine learning";
+    var baselineArea = DEFAULT_BASELINE_AREA;
     var baselineConference = BASELINE_CONFERENCE;
     var useTrendChart = !conferenceView && trendView;
 
@@ -369,10 +370,10 @@ function updateChart(fromYear, toYear) {
         baselineConference = (baselineConferenceSelect && baselineConferenceSelect.value) || BASELINE_CONFERENCE;
         dataPromise = getConferencePointsData(fromYear, toYear, baselineConference);
     } else if (useTrendChart) {
-        baselineArea = (baselineSelect && baselineSelect.value) || "Machine learning";
+        baselineArea = (baselineSelect && baselineSelect.value) || DEFAULT_BASELINE_AREA;
         dataPromise = getICLRPointsTrendData(fromYear, toYear, baselineArea);
     } else {
-        baselineArea = (baselineSelect && baselineSelect.value) || "Machine learning";
+        baselineArea = (baselineSelect && baselineSelect.value) || DEFAULT_BASELINE_AREA;
         dataPromise = getICLRPointsData(fromYear, toYear, baselineArea);
     }
 
