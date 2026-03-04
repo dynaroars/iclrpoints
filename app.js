@@ -430,8 +430,22 @@ function updateChart(fromYear, toYear) {
         "Interdisciplinary Areas": { fill: "rgba(148, 103, 189, 0.4)", line: "rgba(148, 103, 189, 0.9)" }
     };
     var defaultColor = { fill: "rgba(150, 150, 150, 0.4)", line: "rgba(150, 150, 150, 0.9)" };
-    var barColors = parents.map(function(p){ return (colorMap[p] || defaultColor).fill; });
-    var lineColors = parents.map(function(p){ return (colorMap[p] || defaultColor).line; });
+    var baselineFill = "rgba(240, 196, 25, 0.85)";
+    var baselineLine = "rgba(204, 160, 0, 1)";
+    var barColors = [];
+    var lineColors = [];
+    for (var cIdx = 0; cIdx < parents.length; cIdx++) {
+        var parent = parents[cIdx];
+        var baseColors = colorMap[parent] || defaultColor;
+        barColors[cIdx] = baseColors.fill;
+        lineColors[cIdx] = baseColors.line;
+        var label = areas[cIdx];
+        var isBaselineBar = conferenceView ? (label === baselineConference) : (label === baselineArea);
+        if (isBaselineBar) {
+            barColors[cIdx] = baselineFill;
+            lineColors[cIdx] = baselineLine;
+        }
+    }
 
     var hovertemplate;
     if (conferenceView) {
