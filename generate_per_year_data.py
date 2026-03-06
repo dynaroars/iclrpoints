@@ -1,5 +1,8 @@
 import json
+import os
 import sys
+from urllib.request import urlopen
+
 from backend.iclr_point import (
     CSRANKINGS_PATH, AREA_PATH,
     load_faculty_names, load_conference_to_area,
@@ -7,7 +10,18 @@ from backend.iclr_point import (
     get_cached_dblp_conf_data,
 )
 
+CSRANKINGS_URL = "https://raw.githubusercontent.com/emeryberger/CSRankings/gh-pages/csrankings.csv"
+
+def fetch_csrankings_csv():
+    os.makedirs(os.path.dirname(CSRANKINGS_PATH), exist_ok=True)
+    with urlopen(CSRANKINGS_URL, timeout=60) as r:
+        raw = r.read().decode("utf-8", errors="replace")
+    lines = [line for line in raw.splitlines() if line.strip()]
+    with open(CSRANKINGS_PATH, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+
 def generate_per_year_data():
+    fetch_csrankings_csv()
     faculty_set = load_faculty_names(CSRANKINGS_PATH)
     conf_to_area, area_to_parent = load_conference_to_area(AREA_PATH)
     year_area_data = get_cached_dblp_data(conf_to_area, faculty_set)
