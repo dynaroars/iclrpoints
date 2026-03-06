@@ -46,208 +46,297 @@
 
     <div id="layout">
         <div id="sidebar">
+            <div class="sidebar-controls">
+                <button id="select-all-btn" type="button">Select All</button>
+                <button id="deselect-all-btn" type="button">Deselect All</button>
+            </div>
             <div id="checkboxes">
                 <div class="parent-area-row theme-ai">
+                    <input type="checkbox" class="filter-checkbox parent-checkbox" data-parent="AI" checked>
                     <span class="parent-area-label">AI</span>
                 </div>
 
-                <details class="area-block theme-ai">
-                    <summary><span class="area-label">Artificial intelligence</span></summary>
-                    <div class="conference-row"><span class="conference-label">AAAI</span></div>
-                    <div class="conference-row"><span class="conference-label">ICAPS</span></div>
-                    <div class="conference-row"><span class="conference-label">IJCAI</span></div>
-                    <div class="conference-row"><span class="conference-label">KR</span></div>
+                <details class="area-block theme-ai" data-parent="AI">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Artificial intelligence" data-parent="AI" checked>
+                        <span class="area-label">Artificial intelligence</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="AAAI" data-area="Artificial intelligence" checked><span class="conference-label">AAAI</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="ICAPS" data-area="Artificial intelligence" checked><span class="conference-label">ICAPS</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="IJCAI" data-area="Artificial intelligence" checked><span class="conference-label">IJCAI</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="KR" data-area="Artificial intelligence" checked><span class="conference-label">KR</span></div>
                 </details>
 
-                <details class="area-block theme-ai">
-                    <summary><span class="area-label">Computer vision</span></summary>
-                    <div class="conference-row"><span class="conference-label">CVPR</span></div>
-                    <div class="conference-row"><span class="conference-label">ECCV</span></div>
-                    <div class="conference-row"><span class="conference-label">ICCV</span></div>
+                <details class="area-block theme-ai" data-parent="AI">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Computer vision" data-parent="AI" checked>
+                        <span class="area-label">Computer vision</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="CVPR" data-area="Computer vision" checked><span class="conference-label">CVPR</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="ECCV" data-area="Computer vision" checked><span class="conference-label">ECCV</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="ICCV" data-area="Computer vision" checked><span class="conference-label">ICCV</span></div>
                 </details>
 
-                <details class="area-block theme-ai">
-                    <summary><span class="area-label">Machine learning</span></summary>
-                    <div class="conference-row"><span class="conference-label">ICLR</span></div>
-                    <div class="conference-row"><span class="conference-label">ICML</span></div>
-                    <div class="conference-row"><span class="conference-label">KDD</span></div>
-                    <div class="conference-row"><span class="conference-label">NeurIPS</span></div>
+                <details class="area-block theme-ai" data-parent="AI">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Machine learning" data-parent="AI" checked>
+                        <span class="area-label">Machine learning</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="ICLR" data-area="Machine learning" checked><span class="conference-label">ICLR</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="ICML" data-area="Machine learning" checked><span class="conference-label">ICML</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="KDD" data-area="Machine learning" checked><span class="conference-label">KDD</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="NeurIPS" data-area="Machine learning" checked><span class="conference-label">NeurIPS</span></div>
                 </details>
 
-                <details class="area-block theme-ai">
-                    <summary><span class="area-label">Natural language processing</span></summary>
-                    <div class="conference-row"><span class="conference-label">ACL</span></div>
-                    <div class="conference-row"><span class="conference-label">EMNLP</span></div>
-                    <div class="conference-row"><span class="conference-label">NAACL</span></div>
+                <details class="area-block theme-ai" data-parent="AI">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Natural language processing" data-parent="AI" checked>
+                        <span class="area-label">Natural language processing</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="ACL" data-area="Natural language processing" checked><span class="conference-label">ACL</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="EMNLP" data-area="Natural language processing" checked><span class="conference-label">EMNLP</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="NAACL" data-area="Natural language processing" checked><span class="conference-label">NAACL</span></div>
                 </details>
 
-                <details class="area-block theme-ai">
-                    <summary><span class="area-label">The Web &amp; information retrieval</span></summary>
-                    <div class="conference-row"><span class="conference-label">SIGIR</span></div>
-                    <div class="conference-row"><span class="conference-label">WWW</span></div>
+                <details class="area-block theme-ai" data-parent="AI">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="The Web & information retrieval" data-parent="AI" checked>
+                        <span class="area-label">The Web &amp; information retrieval</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="SIGIR" data-area="The Web & information retrieval" checked><span class="conference-label">SIGIR</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="WWW" data-area="The Web & information retrieval" checked><span class="conference-label">WWW</span></div>
                 </details>
 
                 <div class="parent-area-row theme-systems">
+                    <input type="checkbox" class="filter-checkbox parent-checkbox" data-parent="Systems" checked>
                     <span class="parent-area-label">Systems</span>
                 </div>
 
-                <details class="area-block theme-systems">
-                    <summary><span class="area-label">Computer architecture</span></summary>
-                    <div class="conference-row"><span class="conference-label">ASPLOS</span></div>
-                    <div class="conference-row"><span class="conference-label">HPCA</span></div>
-                    <div class="conference-row"><span class="conference-label">ISCA</span></div>
-                    <div class="conference-row"><span class="conference-label">MICRO</span></div>
+                <details class="area-block theme-systems" data-parent="Systems">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Computer architecture" data-parent="Systems" checked>
+                        <span class="area-label">Computer architecture</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="ASPLOS" data-area="Computer architecture" checked><span class="conference-label">ASPLOS</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="HPCA" data-area="Computer architecture" checked><span class="conference-label">HPCA</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="ISCA" data-area="Computer architecture" checked><span class="conference-label">ISCA</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="MICRO" data-area="Computer architecture" checked><span class="conference-label">MICRO</span></div>
                 </details>
 
-                <details class="area-block theme-systems">
-                    <summary><span class="area-label">Computer networks</span></summary>
-                    <div class="conference-row"><span class="conference-label">INFOCOM</span></div>
-                    <div class="conference-row"><span class="conference-label">SIGCOMM</span></div>
-                    <div class="conference-row"><span class="conference-label">NSDI</span></div>
+                <details class="area-block theme-systems" data-parent="Systems">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Computer networks" data-parent="Systems" checked>
+                        <span class="area-label">Computer networks</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="INFOCOM" data-area="Computer networks" checked><span class="conference-label">INFOCOM</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="SIGCOMM" data-area="Computer networks" checked><span class="conference-label">SIGCOMM</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="NSDI" data-area="Computer networks" checked><span class="conference-label">NSDI</span></div>
                 </details>
 
-                <details class="area-block theme-systems">
-                    <summary><span class="area-label">Computer security</span></summary>
-                    <div class="conference-row"><span class="conference-label">CCS</span></div>
-                    <div class="conference-row"><span class="conference-label">IEEE S&amp;P</span></div>
-                    <div class="conference-row"><span class="conference-label">NDSS</span></div>
-                    <div class="conference-row"><span class="conference-label">USENIX Security</span></div>
+                <details class="area-block theme-systems" data-parent="Systems">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Computer security" data-parent="Systems" checked>
+                        <span class="area-label">Computer security</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="CCS" data-area="Computer security" checked><span class="conference-label">CCS</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="IEEE S&P" data-area="Computer security" checked><span class="conference-label">IEEE S&amp;P</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="NDSS" data-area="Computer security" checked><span class="conference-label">NDSS</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="USENIX Security" data-area="Computer security" checked><span class="conference-label">USENIX Security</span></div>
                 </details>
 
-                <details class="area-block theme-systems">
-                    <summary><span class="area-label">Databases</span></summary>
-                    <div class="conference-row"><span class="conference-label">ICDE</span></div>
-                    <div class="conference-row"><span class="conference-label">PODS</span></div>
-                    <div class="conference-row"><span class="conference-label">SIGMOD</span></div>
-                    <div class="conference-row"><span class="conference-label">VLDB</span></div>
+                <details class="area-block theme-systems" data-parent="Systems">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Databases" data-parent="Systems" checked>
+                        <span class="area-label">Databases</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="ICDE" data-area="Databases" checked><span class="conference-label">ICDE</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="PODS" data-area="Databases" checked><span class="conference-label">PODS</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="SIGMOD" data-area="Databases" checked><span class="conference-label">SIGMOD</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="VLDB" data-area="Databases" checked><span class="conference-label">VLDB</span></div>
                 </details>
 
-                <details class="area-block theme-systems">
-                    <summary><span class="area-label">Design automation</span></summary>
-                    <div class="conference-row"><span class="conference-label">DAC</span></div>
-                    <div class="conference-row"><span class="conference-label">ICCAD</span></div>
+                <details class="area-block theme-systems" data-parent="Systems">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Design automation" data-parent="Systems" checked>
+                        <span class="area-label">Design automation</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="DAC" data-area="Design automation" checked><span class="conference-label">DAC</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="ICCAD" data-area="Design automation" checked><span class="conference-label">ICCAD</span></div>
                 </details>
 
-                <details class="area-block theme-systems">
-                    <summary><span class="area-label">Embedded &amp; real-time systems</span></summary>
-                    <div class="conference-row"><span class="conference-label">EMSOFT</span></div>
-                    <div class="conference-row"><span class="conference-label">RTAS</span></div>
-                    <div class="conference-row"><span class="conference-label">RTSS</span></div>
+                <details class="area-block theme-systems" data-parent="Systems">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Embedded & real-time systems" data-parent="Systems" checked>
+                        <span class="area-label">Embedded &amp; real-time systems</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="EMSOFT" data-area="Embedded & real-time systems" checked><span class="conference-label">EMSOFT</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="RTAS" data-area="Embedded & real-time systems" checked><span class="conference-label">RTAS</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="RTSS" data-area="Embedded & real-time systems" checked><span class="conference-label">RTSS</span></div>
                 </details>
 
-                <details class="area-block theme-systems">
-                    <summary><span class="area-label">High-performance computing</span></summary>
-                    <div class="conference-row"><span class="conference-label">HPDC</span></div>
-                    <div class="conference-row"><span class="conference-label">ICS</span></div>
-                    <div class="conference-row"><span class="conference-label">SC</span></div>
+                <details class="area-block theme-systems" data-parent="Systems">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="High-performance computing" data-parent="Systems" checked>
+                        <span class="area-label">High-performance computing</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="HPDC" data-area="High-performance computing" checked><span class="conference-label">HPDC</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="ICS" data-area="High-performance computing" checked><span class="conference-label">ICS</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="SC" data-area="High-performance computing" checked><span class="conference-label">SC</span></div>
                 </details>
 
-                <details class="area-block theme-systems">
-                    <summary><span class="area-label">Mobile computing</span></summary>
-                    <div class="conference-row"><span class="conference-label">MobiCom</span></div>
-                    <div class="conference-row"><span class="conference-label">MobiSys</span></div>
-                    <div class="conference-row"><span class="conference-label">SenSys</span></div>
+                <details class="area-block theme-systems" data-parent="Systems">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Mobile computing" data-parent="Systems" checked>
+                        <span class="area-label">Mobile computing</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="MobiCom" data-area="Mobile computing" checked><span class="conference-label">MobiCom</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="MobiSys" data-area="Mobile computing" checked><span class="conference-label">MobiSys</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="SenSys" data-area="Mobile computing" checked><span class="conference-label">SenSys</span></div>
                 </details>
 
-                <details class="area-block theme-systems">
-                    <summary><span class="area-label">Measurement &amp; perf. analysis</span></summary>
-                    <div class="conference-row"><span class="conference-label">IMC</span></div>
-                    <div class="conference-row"><span class="conference-label">SIGMETRICS</span></div>
+                <details class="area-block theme-systems" data-parent="Systems">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Measurement & perf. analysis" data-parent="Systems" checked>
+                        <span class="area-label">Measurement &amp; perf. analysis</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="IMC" data-area="Measurement & perf. analysis" checked><span class="conference-label">IMC</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="SIGMETRICS" data-area="Measurement & perf. analysis" checked><span class="conference-label">SIGMETRICS</span></div>
                 </details>
 
-                <details class="area-block theme-systems">
-                    <summary><span class="area-label">Operating systems</span></summary>
-                    <div class="conference-row"><span class="conference-label">OSDI</span></div>
-                    <div class="conference-row"><span class="conference-label">SOSP</span></div>
+                <details class="area-block theme-systems" data-parent="Systems">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Operating systems" data-parent="Systems" checked>
+                        <span class="area-label">Operating systems</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="OSDI" data-area="Operating systems" checked><span class="conference-label">OSDI</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="SOSP" data-area="Operating systems" checked><span class="conference-label">SOSP</span></div>
                 </details>
 
-                <details class="area-block theme-systems">
-                    <summary><span class="area-label">Programming languages</span></summary>
-                    <div class="conference-row"><span class="conference-label">PLDI</span></div>
-                    <div class="conference-row"><span class="conference-label">POPL</span></div>
+                <details class="area-block theme-systems" data-parent="Systems">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Programming languages" data-parent="Systems" checked>
+                        <span class="area-label">Programming languages</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="PLDI" data-area="Programming languages" checked><span class="conference-label">PLDI</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="POPL" data-area="Programming languages" checked><span class="conference-label">POPL</span></div>
                 </details>
 
-                <details class="area-block theme-systems">
-                    <summary><span class="area-label">Software engineering</span></summary>
-                    <div class="conference-row"><span class="conference-label">ASE</span></div>
-                    <div class="conference-row"><span class="conference-label">FSE</span></div>
-                    <div class="conference-row"><span class="conference-label">ICSE</span></div>
-                    <div class="conference-row"><span class="conference-label">ISSTA</span></div>
+                <details class="area-block theme-systems" data-parent="Systems">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Software engineering" data-parent="Systems" checked>
+                        <span class="area-label">Software engineering</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="ASE" data-area="Software engineering" checked><span class="conference-label">ASE</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="FSE" data-area="Software engineering" checked><span class="conference-label">FSE</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="ICSE" data-area="Software engineering" checked><span class="conference-label">ICSE</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="ISSTA" data-area="Software engineering" checked><span class="conference-label">ISSTA</span></div>
                 </details>
 
                 <div class="parent-area-row theme-theory">
+                    <input type="checkbox" class="filter-checkbox parent-checkbox" data-parent="Theory" checked>
                     <span class="parent-area-label">Theory</span>
                 </div>
 
-                <details class="area-block theme-theory">
-                    <summary><span class="area-label">Algorithms &amp; complexity</span></summary>
-                    <div class="conference-row"><span class="conference-label">COLT</span></div>
-                    <div class="conference-row"><span class="conference-label">FOCS</span></div>
-                    <div class="conference-row"><span class="conference-label">ICALP</span></div>
-                    <div class="conference-row"><span class="conference-label">SODA</span></div>
-                    <div class="conference-row"><span class="conference-label">SoCG</span></div>
-                    <div class="conference-row"><span class="conference-label">STOC</span></div>
+                <details class="area-block theme-theory" data-parent="Theory">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Algorithms & complexity" data-parent="Theory" checked>
+                        <span class="area-label">Algorithms &amp; complexity</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="COLT" data-area="Algorithms & complexity" checked><span class="conference-label">COLT</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="FOCS" data-area="Algorithms & complexity" checked><span class="conference-label">FOCS</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="ICALP" data-area="Algorithms & complexity" checked><span class="conference-label">ICALP</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="SODA" data-area="Algorithms & complexity" checked><span class="conference-label">SODA</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="SoCG" data-area="Algorithms & complexity" checked><span class="conference-label">SoCG</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="STOC" data-area="Algorithms & complexity" checked><span class="conference-label">STOC</span></div>
                 </details>
 
-                <details class="area-block theme-theory">
-                    <summary><span class="area-label">Cryptography</span></summary>
-                    <div class="conference-row"><span class="conference-label">CRYPTO</span></div>
-                    <div class="conference-row"><span class="conference-label">EuroCrypt</span></div>
+                <details class="area-block theme-theory" data-parent="Theory">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Cryptography" data-parent="Theory" checked>
+                        <span class="area-label">Cryptography</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="CRYPTO" data-area="Cryptography" checked><span class="conference-label">CRYPTO</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="EuroCrypt" data-area="Cryptography" checked><span class="conference-label">EuroCrypt</span></div>
                 </details>
 
-                <details class="area-block theme-theory">
-                    <summary><span class="area-label">Logic &amp; verification</span></summary>
-                    <div class="conference-row"><span class="conference-label">CAV</span></div>
-                    <div class="conference-row"><span class="conference-label">LICS</span></div>
+                <details class="area-block theme-theory" data-parent="Theory">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Logic & verification" data-parent="Theory" checked>
+                        <span class="area-label">Logic &amp; verification</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="CAV" data-area="Logic & verification" checked><span class="conference-label">CAV</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="LICS" data-area="Logic & verification" checked><span class="conference-label">LICS</span></div>
                 </details>
 
                 <div class="parent-area-row theme-interdisciplinary">
+                    <input type="checkbox" class="filter-checkbox parent-checkbox" data-parent="Interdisciplinary Areas" checked>
                     <span class="parent-area-label">Interdisciplinary Areas</span>
                 </div>
 
-                <details class="area-block theme-interdisciplinary">
-                    <summary><span class="area-label">Comp. bio &amp; bioinformatics</span></summary>
-                    <div class="conference-row"><span class="conference-label">ISMB</span></div>
-                    <div class="conference-row"><span class="conference-label">RECOMB</span></div>
+                <details class="area-block theme-interdisciplinary" data-parent="Interdisciplinary Areas">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Comp. bio & bioinformatics" data-parent="Interdisciplinary Areas" checked>
+                        <span class="area-label">Comp. bio &amp; bioinformatics</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="ISMB" data-area="Comp. bio & bioinformatics" checked><span class="conference-label">ISMB</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="RECOMB" data-area="Comp. bio & bioinformatics" checked><span class="conference-label">RECOMB</span></div>
                 </details>
 
-                <details class="area-block theme-interdisciplinary">
-                    <summary><span class="area-label">Computer graphics</span></summary>
-                    <div class="conference-row"><span class="conference-label">SIGGRAPH</span></div>
-                    <div class="conference-row"><span class="conference-label">SIGGRAPH Asia</span></div>
+                <details class="area-block theme-interdisciplinary" data-parent="Interdisciplinary Areas">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Computer graphics" data-parent="Interdisciplinary Areas" checked>
+                        <span class="area-label">Computer graphics</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="SIGGRAPH" data-area="Computer graphics" checked><span class="conference-label">SIGGRAPH</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="SIGGRAPH Asia" data-area="Computer graphics" checked><span class="conference-label">SIGGRAPH Asia</span></div>
                 </details>
 
-                <details class="area-block theme-interdisciplinary">
-                    <summary><span class="area-label">Computer science education</span></summary>
-                    <div class="conference-row"><span class="conference-label">SIGCSE</span></div>
+                <details class="area-block theme-interdisciplinary" data-parent="Interdisciplinary Areas">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Computer science education" data-parent="Interdisciplinary Areas" checked>
+                        <span class="area-label">Computer science education</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="SIGCSE" data-area="Computer science education" checked><span class="conference-label">SIGCSE</span></div>
                 </details>
 
-                <details class="area-block theme-interdisciplinary">
-                    <summary><span class="area-label">Economics &amp; computation</span></summary>
-                    <div class="conference-row"><span class="conference-label">EC</span></div>
-                    <div class="conference-row"><span class="conference-label">WINE</span></div>
+                <details class="area-block theme-interdisciplinary" data-parent="Interdisciplinary Areas">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Economics & computation" data-parent="Interdisciplinary Areas" checked>
+                        <span class="area-label">Economics &amp; computation</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="EC" data-area="Economics & computation" checked><span class="conference-label">EC</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="WINE" data-area="Economics & computation" checked><span class="conference-label">WINE</span></div>
                 </details>
 
-                <details class="area-block theme-interdisciplinary">
-                    <summary><span class="area-label">Human-computer interaction</span></summary>
-                    <div class="conference-row"><span class="conference-label">CHI</span></div>
-                    <div class="conference-row"><span class="conference-label">PERCOM</span></div>
-                    <div class="conference-row"><span class="conference-label">UbiComp</span></div>
-                    <div class="conference-row"><span class="conference-label">UIST</span></div>
+                <details class="area-block theme-interdisciplinary" data-parent="Interdisciplinary Areas">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Human-computer interaction" data-parent="Interdisciplinary Areas" checked>
+                        <span class="area-label">Human-computer interaction</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="CHI" data-area="Human-computer interaction" checked><span class="conference-label">CHI</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="PERCOM" data-area="Human-computer interaction" checked><span class="conference-label">PERCOM</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="UbiComp" data-area="Human-computer interaction" checked><span class="conference-label">UbiComp</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="UIST" data-area="Human-computer interaction" checked><span class="conference-label">UIST</span></div>
                 </details>
 
-                <details class="area-block theme-interdisciplinary">
-                    <summary><span class="area-label">Robotics</span></summary>
-                    <div class="conference-row"><span class="conference-label">HRI</span></div>
-                    <div class="conference-row"><span class="conference-label">ICRA</span></div>
-                    <div class="conference-row"><span class="conference-label">IROS</span></div>
-                    <div class="conference-row"><span class="conference-label">RSS</span></div>
+                <details class="area-block theme-interdisciplinary" data-parent="Interdisciplinary Areas">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Robotics" data-parent="Interdisciplinary Areas" checked>
+                        <span class="area-label">Robotics</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="HRI" data-area="Robotics" checked><span class="conference-label">HRI</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="ICRA" data-area="Robotics" checked><span class="conference-label">ICRA</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="IROS" data-area="Robotics" checked><span class="conference-label">IROS</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="RSS" data-area="Robotics" checked><span class="conference-label">RSS</span></div>
                 </details>
 
-                <details class="area-block theme-interdisciplinary">
-                    <summary><span class="area-label">Visualization</span></summary>
-                    <div class="conference-row"><span class="conference-label">VIS</span></div>
-                    <div class="conference-row"><span class="conference-label">VR</span></div>
+                <details class="area-block theme-interdisciplinary" data-parent="Interdisciplinary Areas">
+                    <summary>
+                        <input type="checkbox" class="filter-checkbox area-checkbox" data-area="Visualization" data-parent="Interdisciplinary Areas" checked>
+                        <span class="area-label">Visualization</span>
+                    </summary>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="VIS" data-area="Visualization" checked><span class="conference-label">VIS</span></div>
+                    <div class="conference-row"><input type="checkbox" class="filter-checkbox conf-checkbox" data-conf="VR" data-area="Visualization" checked><span class="conference-label">VR</span></div>
                 </details>
             </div>
         </div>
