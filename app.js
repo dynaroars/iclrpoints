@@ -2,6 +2,147 @@ var perYearData = null;
 var BASELINE_CONFERENCE = "ICLR";
 var DEFAULT_BASELINE_AREA = "Machine learning";
 
+function getCheckedAreas() {
+    var checked = {};
+    var checkboxes = document.querySelectorAll('.area-checkbox');
+    for (var i = 0; i < checkboxes.length; i++) {
+        var cb = checkboxes[i];
+        if (cb.checked) {
+            checked[cb.getAttribute('data-area')] = true;
+        }
+    }
+    return checked;
+}
+
+function getCheckedConferences() {
+    var checked = {};
+    var checkboxes = document.querySelectorAll('.conf-checkbox');
+    for (var i = 0; i < checkboxes.length; i++) {
+        var cb = checkboxes[i];
+        if (cb.checked) {
+            checked[cb.getAttribute('data-conf')] = true;
+        }
+    }
+    return checked;
+}
+
+function setAllCheckboxes(checked) {
+    var allCheckboxes = document.querySelectorAll('.filter-checkbox');
+    for (var i = 0; i < allCheckboxes.length; i++) {
+        allCheckboxes[i].checked = checked;
+    }
+}
+
+function updateChildCheckboxes(parentValue, checked) {
+    var areaCheckboxes = document.querySelectorAll('.area-checkbox[data-parent="' + parentValue + '"]');
+    for (var i = 0; i < areaCheckboxes.length; i++) {
+        areaCheckboxes[i].checked = checked;
+        var areaValue = areaCheckboxes[i].getAttribute('data-area');
+        var confCheckboxes = document.querySelectorAll('.conf-checkbox[data-area="' + areaValue + '"]');
+        for (var j = 0; j < confCheckboxes.length; j++) {
+            confCheckboxes[j].checked = checked;
+        }
+    }
+}
+
+function updateConferenceCheckboxes(areaValue, checked) {
+    var confCheckboxes = document.querySelectorAll('.conf-checkbox[data-area="' + areaValue + '"]');
+    for (var i = 0; i < confCheckboxes.length; i++) {
+        confCheckboxes[i].checked = checked;
+    }
+}
+
+function updateParentCheckboxState(parentValue) {
+    var areaCheckboxes = document.querySelectorAll('.area-checkbox[data-parent="' + parentValue + '"]');
+    var allChecked = true;
+    var anyChecked = false;
+    for (var i = 0; i < areaCheckboxes.length; i++) {
+        if (areaCheckboxes[i].checked) {
+            anyChecked = true;
+        } else {
+            allChecked = false;
+        }
+    }
+    var parentCheckbox = document.querySelector('.parent-checkbox[data-parent="' + parentValue + '"]');
+    if (parentCheckbox) {
+        parentCheckbox.checked = anyChecked;
+        parentCheckbox.indeterminate = anyChecked && !allChecked;
+    }
+}
+
+function updateAreaCheckboxState(areaValue) {
+    var confCheckboxes = document.querySelectorAll('.conf-checkbox[data-area="' + areaValue + '"]');
+    var allChecked = true;
+    var anyChecked = false;
+    for (var i = 0; i < confCheckboxes.length; i++) {
+        if (confCheckboxes[i].checked) {
+            anyChecked = true;
+        } else {
+            allChecked = false;
+        }
+    }
+    var areaCheckbox = document.querySelector('.area-checkbox[data-area="' + areaValue + '"]');
+    if (areaCheckbox) {
+        areaCheckbox.checked = anyChecked;
+        areaCheckbox.indeterminate = anyChecked && !allChecked;
+        var parentValue = areaCheckbox.getAttribute('data-parent');
+        updateParentCheckboxState(parentValue);
+    }
+}
+
+function setupFilterCheckboxes() {
+    var selectAllBtn = document.getElementById('select-all-btn');
+    var deselectAllBtn = document.getElementById('deselect-all-btn');
+    
+    if (selectAllBtn) {
+        selectAllBtn.addEventListener('click', function() {
+            setAllCheckboxes(true);
+            var yrs = getYearsFromInput();
+            updateChart(yrs.from, yrs.to);
+        });
+    }
+    
+    if (deselectAllBtn) {
+        deselectAllBtn.addEventListener('click', function() {
+            setAllCheckboxes(false);
+            var yrs = getYearsFromInput();
+            updateChart(yrs.from, yrs.to);
+        });
+    }
+    
+    var parentCheckboxes = document.querySelectorAll('.parent-checkbox');
+    for (var i = 0; i < parentCheckboxes.length; i++) {
+        parentCheckboxes[i].addEventListener('change', function(e) {
+            var parentValue = e.target.getAttribute('data-parent');
+            updateChildCheckboxes(parentValue, e.target.checked);
+            var yrs = getYearsFromInput();
+            updateChart(yrs.from, yrs.to);
+        });
+    }
+    
+    var areaCheckboxes = document.querySelectorAll('.area-checkbox');
+    for (var i = 0; i < areaCheckboxes.length; i++) {
+        areaCheckboxes[i].addEventListener('change', function(e) {
+            var areaValue = e.target.getAttribute('data-area');
+            var parentValue = e.target.getAttribute('data-parent');
+            updateConferenceCheckboxes(areaValue, e.target.checked);
+            updateParentCheckboxState(parentValue);
+            var yrs = getYearsFromInput();
+            updateChart(yrs.from, yrs.to);
+        });
+    }
+    
+    var confCheckboxes = document.querySelectorAll('.conf-checkbox');
+    for (var i = 0; i < confCheckboxes.length; i++) {
+        confCheckboxes[i].addEventListener('change', function(e) {
+            var areaValue = e.target.getAttribute('data-area');
+            updateAreaCheckboxState(areaValue);
+            var yrs = getYearsFromInput();
+            updateChart(yrs.from, yrs.to);
+        });
+    }
+}
+
 function isConferenceViewEnabled() {
     var el = document.getElementById("conference-view-toggle");
     return !!(el && el.checked);
@@ -118,6 +259,8 @@ function computeICLRPoints(fromYear, toYear, baselineArea) {
     if (!perYearData) {
         throw new Error("Data not loaded");
     }
+    
+    var checkedAreas = getCheckedAreas();
     var aggregatedPublicationCountByArea = {};
     var aggregatedFacultySetsByArea = {};
     
@@ -129,6 +272,9 @@ function computeICLRPoints(fromYear, toYear, baselineArea) {
         
         var yearData = perYearData.years[yearStr];
         for (var area in yearData) {
+            if (!checkedAreas[area]) {
+                continue;
+            }
             var data = yearData[area];
             aggregatedPublicationCountByArea[area] =
                 (aggregatedPublicationCountByArea[area] || 0) + data.publication_count;
@@ -187,6 +333,8 @@ function computeICLRPointsTrend(fromYear, toYear, baselineArea) {
     if (!perYearData) {
         throw new Error("Data not loaded");
     }
+    
+    var checkedAreas = getCheckedAreas();
     var years = [];
     var areaToPointsByYear = {};
     var parentOrder = ["AI", "Systems", "Theory", "Interdisciplinary Areas"];
@@ -200,6 +348,9 @@ function computeICLRPointsTrend(fromYear, toYear, baselineArea) {
         var areaToPublicationCount = {};
 
         for (var area in yearData) {
+            if (!checkedAreas[area]) {
+                continue;
+            }
             var data = yearData[area];
             areaToFaculty[area] = data.faculty_names;
             areaToPublicationCount[area] = data.publication_count;
@@ -247,6 +398,7 @@ function computeConferenceICLRPoints(fromYear, toYear, baselineConference) {
         throw new Error("Conference-level data not available. Regenerate per_year_data.json.");
     }
 
+    var checkedConferences = getCheckedConferences();
     var aggregatedPublicationCountByConf = {};
     var aggregatedFacultySetsByConf = {};
     var conferenceToArea = perYearData.conference_to_area || {};
@@ -257,6 +409,9 @@ function computeConferenceICLRPoints(fromYear, toYear, baselineConference) {
         if (!yearData) continue;
 
         for (var conf in yearData) {
+            if (!checkedConferences[conf]) {
+                continue;
+            }
             var data = yearData[conf];
             aggregatedPublicationCountByConf[conf] =
                 (aggregatedPublicationCountByConf[conf] || 0) + data.publication_count;
@@ -753,6 +908,7 @@ function getYearsFromInput() {
 
 function setup(){
     populateYearDropdowns();
+    setupFilterCheckboxes();
     loadPerYearData()
         .then(function(data) {
             if (data.available_areas && data.available_areas.length > 0) {
