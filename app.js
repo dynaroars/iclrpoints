@@ -260,32 +260,62 @@ function computeICLRPoints(fromYear, toYear, baselineArea) {
         throw new Error("Data not loaded");
     }
     
-    var checkedAreas = getCheckedAreas();
+    var checkedConferences = getCheckedConferences();
+    var conferenceToArea = perYearData.conference_to_area || {};
     var aggregatedPublicationCountByArea = {};
     var aggregatedFacultySetsByArea = {};
     
-    for (var year = fromYear; year <= toYear; year++) {
-        var yearStr = String(year);
-        if (!perYearData.years[yearStr]) {
-            continue;
+    if (perYearData.years_by_conference) {
+        for (var year = fromYear; year <= toYear; year++) {
+            var yearStr = String(year);
+            var yearData = perYearData.years_by_conference[yearStr];
+            if (!yearData) continue;
+            
+            for (var conf in yearData) {
+                if (!checkedConferences[conf]) {
+                    continue;
+                }
+                var data = yearData[conf];
+                var area = conferenceToArea[conf] || data.area;
+                if (!area) continue;
+                
+                aggregatedPublicationCountByArea[area] =
+                    (aggregatedPublicationCountByArea[area] || 0) + data.publication_count;
+                if (!aggregatedFacultySetsByArea[area]) {
+                    aggregatedFacultySetsByArea[area] = [];
+                }
+                var existingSet = new Set(aggregatedFacultySetsByArea[area]);
+                for (var i = 0; i < data.faculty_names.length; i++) {
+                    existingSet.add(data.faculty_names[i]);
+                }
+                aggregatedFacultySetsByArea[area] = Array.from(existingSet);
+            }
         }
-        
-        var yearData = perYearData.years[yearStr];
-        for (var area in yearData) {
-            if (!checkedAreas[area]) {
+    } else {
+        var checkedAreas = getCheckedAreas();
+        for (var year = fromYear; year <= toYear; year++) {
+            var yearStr = String(year);
+            if (!perYearData.years[yearStr]) {
                 continue;
             }
-            var data = yearData[area];
-            aggregatedPublicationCountByArea[area] =
-                (aggregatedPublicationCountByArea[area] || 0) + data.publication_count;
-            if (!aggregatedFacultySetsByArea[area]) {
-                aggregatedFacultySetsByArea[area] = [];
+            
+            var yearData = perYearData.years[yearStr];
+            for (var area in yearData) {
+                if (!checkedAreas[area]) {
+                    continue;
+                }
+                var data = yearData[area];
+                aggregatedPublicationCountByArea[area] =
+                    (aggregatedPublicationCountByArea[area] || 0) + data.publication_count;
+                if (!aggregatedFacultySetsByArea[area]) {
+                    aggregatedFacultySetsByArea[area] = [];
+                }
+                var existingSet = new Set(aggregatedFacultySetsByArea[area]);
+                for (var i = 0; i < data.faculty_names.length; i++) {
+                    existingSet.add(data.faculty_names[i]);
+                }
+                aggregatedFacultySetsByArea[area] = Array.from(existingSet);
             }
-            var existingSet = new Set(aggregatedFacultySetsByArea[area]);
-            for (var i = 0; i < data.faculty_names.length; i++) {
-                existingSet.add(data.faculty_names[i]);
-            }
-            aggregatedFacultySetsByArea[area] = Array.from(existingSet);
         }
     }
     
@@ -334,26 +364,50 @@ function computeICLRPointsTrend(fromYear, toYear, baselineArea) {
         throw new Error("Data not loaded");
     }
     
-    var checkedAreas = getCheckedAreas();
+    var checkedConferences = getCheckedConferences();
+    var conferenceToArea = perYearData.conference_to_area || {};
     var years = [];
     var areaToPointsByYear = {};
     var parentOrder = ["AI", "Systems", "Theory", "Interdisciplinary Areas"];
 
     for (var year = fromYear; year <= toYear; year++) {
         var yearStr = String(year);
-        if (!perYearData.years[yearStr]) continue;
-
-        var yearData = perYearData.years[yearStr];
         var areaToFaculty = {};
         var areaToPublicationCount = {};
 
-        for (var area in yearData) {
-            if (!checkedAreas[area]) {
-                continue;
+        if (perYearData.years_by_conference && perYearData.years_by_conference[yearStr]) {
+            var yearConfData = perYearData.years_by_conference[yearStr];
+            for (var conf in yearConfData) {
+                if (!checkedConferences[conf]) {
+                    continue;
+                }
+                var data = yearConfData[conf];
+                var area = conferenceToArea[conf] || data.area;
+                if (!area) continue;
+                
+                if (!areaToFaculty[area]) {
+                    areaToFaculty[area] = [];
+                }
+                var existingSet = new Set(areaToFaculty[area]);
+                for (var i = 0; i < data.faculty_names.length; i++) {
+                    existingSet.add(data.faculty_names[i]);
+                }
+                areaToFaculty[area] = Array.from(existingSet);
+                areaToPublicationCount[area] = (areaToPublicationCount[area] || 0) + data.publication_count;
             }
-            var data = yearData[area];
-            areaToFaculty[area] = data.faculty_names;
-            areaToPublicationCount[area] = data.publication_count;
+        } else if (perYearData.years[yearStr]) {
+            var checkedAreas = getCheckedAreas();
+            var yearData = perYearData.years[yearStr];
+            for (var area in yearData) {
+                if (!checkedAreas[area]) {
+                    continue;
+                }
+                var data = yearData[area];
+                areaToFaculty[area] = data.faculty_names;
+                areaToPublicationCount[area] = data.publication_count;
+            }
+        } else {
+            continue;
         }
 
         var areaToFractionalFacultyCount = computeFractionalFaculty(areaToFaculty);
@@ -541,6 +595,14 @@ function updateChart(fromYear, toYear) {
 
     dataPromise
         .then(function(data){
+            if (!data || data.length === 0) {
+                var chartEl = document.getElementById("chart");
+                if (chartEl) {
+                    Plotly.purge(chartEl);
+                    chartEl.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 400px; color: #666; font-size: 1.1em;">No data available. Please select at least one conference containing the baseline.</div>';
+                }
+                return;
+            }
 
             var parentOrder= ["AI", "Systems", "Theory", "Interdisciplinary Areas"];
             var rows = [];
@@ -764,6 +826,15 @@ function renderTrendChart(trendData) {
     var baselineArea = trendData.baselineArea;
     var parentOrder = ["AI", "Systems", "Theory", "Interdisciplinary Areas"];
     var areaToParent = perYearData && perYearData.area_to_parent ? perYearData.area_to_parent : {};
+
+    if (!years || years.length === 0) {
+        var chartEl = document.getElementById("chart");
+        if (chartEl) {
+            Plotly.purge(chartEl);
+            chartEl.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 400px; color: #666; font-size: 1.1em;">No data available. Please select at least one conference containing the baseline.</div>';
+        }
+        return;
+    }
 
     var colorMap = {
         "AI": "rgb(31, 119, 180)",
