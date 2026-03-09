@@ -822,7 +822,7 @@ function updateChart(fromYear, toYear) {
 
 function renderTrendChart(trendData) {
     var years = trendData.years;
-    var areaToPointsByYear = trendData.areaToPointsByYear;
+    var areaToPointsByYear = trendData.areaToPointsByYear || {};
     var baselineArea = trendData.baselineArea;
     var parentOrder = ["AI", "Systems", "Theory", "Interdisciplinary Areas"];
     var areaToParent = perYearData && perYearData.area_to_parent ? perYearData.area_to_parent : {};
@@ -888,6 +888,15 @@ function renderTrendChart(trendData) {
                 namelength: -1
             }
         });
+    }
+
+    if (traces.length === 0) {
+        var chartEl = document.getElementById("chart");
+        if (chartEl) {
+            Plotly.purge(chartEl);
+            chartEl.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 400px; color: #666; font-size: 1.1em;">No data available. Select at least one conference containing the baseline.</div>';
+        }
+        return;
     }
 
     var yMax = 0;
