@@ -7,6 +7,7 @@ DBLP_PATH = "data/dblp.xml.gz"
 
 _dblp_cache = None
 _dblp_conf_cache = None
+_dblp_paper_cache = None
 
 def load_faculty_names(csrankings_path):
     faculty_set = set()
@@ -31,10 +32,27 @@ def load_conference_to_area(area_path):
             area_to_parent[area] = parent_area
     return conf_to_area, area_to_parent
 
+def _extract_doi_from_ee(elem):
+    """Extract DOI from <ee> elements. Returns normalized DOI or None."""
+    for ee_elem in elem.findall("ee"):
+        text = (ee_elem.text or "").strip()
+        if not text:
+            continue
+        text_lower = text.lower()
+        if "doi.org/" in text_lower:
+            doi = text_lower.split("doi.org/", 1)[1].split()[0].rstrip("/")
+            if doi and doi.startswith("10."):
+                return doi
+        if text_lower.startswith("10."):
+            return text_lower.split()[0].rstrip("/")
+    return None
+
+
 def parse_dblp_full(dblp_path, conf_to_area, faculty_set):
     year_area_data = {}
     year_conf_data = {}
-    
+    paper_records = []
+
     with gzip.open(dblp_path, "rb") as dblp_file:
         context = ET.iterparse(dblp_file, events=("end",))
         _, root = next(context)
@@ -83,22 +101,42 @@ def parse_dblp_full(dblp_path, conf_to_area, faculty_set):
                             year_area_data[year][area]["faculty_names"].add(author_name)
                             if conference:
                                 year_conf_data[year][conference]["faculty_names"].add(author_name)
-                            
+
+                    if conference:
+                        doi = _extract_doi_from_ee(elem)
+                        paper_records.append({
+                            "year": year,
+                            "area": area,
+                            "conference": conference,
+                            "doi": doi,
+                        })
+
             root.clear()
-    
-    return year_area_data, year_conf_data
+
+    return year_area_data, year_conf_data, paper_records
 
 def get_cached_dblp_data(conf_to_area, faculty_set):
-    global _dblp_cache, _dblp_conf_cache
+    global _dblp_cache, _dblp_conf_cache, _dblp_paper_cache
     if _dblp_cache is None:
-        _dblp_cache, _dblp_conf_cache = parse_dblp_full(DBLP_PATH, conf_to_area, faculty_set)
+        _dblp_cache, _dblp_conf_cache, _dblp_paper_cache = parse_dblp_full(
+            DBLP_PATH, conf_to_area, faculty_set
+        )
     return _dblp_cache
+
 
 def get_cached_dblp_conf_data(conf_to_area, faculty_set):
     global _dblp_conf_cache
     if _dblp_conf_cache is None:
         get_cached_dblp_data(conf_to_area, faculty_set)
     return _dblp_conf_cache
+
+
+def get_cached_dblp_paper_data(conf_to_area, faculty_set):
+    """Returns list of {year, area, conference, doi} for papers in tracked venues."""
+    global _dblp_paper_cache
+    if _dblp_paper_cache is None:
+        get_cached_dblp_data(conf_to_area, faculty_set)
+    return _dblp_paper_cache
 
 def compute_fractional_faculty(area_to_faculty):
     faculty_to_areas = {}
