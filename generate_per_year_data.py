@@ -10,6 +10,7 @@ from backend.iclr_point import (
     load_faculty_names, load_conference_to_area,
     get_cached_dblp_data,
     get_cached_dblp_conf_data,
+    get_cached_dblp_paper_data,
 )
 
 CSRANKINGS_URL = "https://raw.githubusercontent.com/emeryberger/CSRankings/gh-pages/csrankings.csv"
@@ -108,6 +109,8 @@ def generate_per_year_data():
         for area, data in area_data.items():
             json_data["years"][year_str][area] = {
                 "publication_count": data["publication_count"],
+                "citation_count": 0,
+                "age_adjusted_citation_count": 0.0,
                 "faculty_names": sorted(list(data["faculty_names"]))
             }
 
@@ -120,9 +123,47 @@ def generate_per_year_data():
                 conf_set.add(conf)
                 json_data["years_by_conference"][year_str][conf] = {
                     "publication_count": data["publication_count"],
+                    "citation_count": 0,
+                    "age_adjusted_citation_count": 0.0,
                     "faculty_names": sorted(list(data["faculty_names"])),
                     "area": conf_to_area.get(conf)
                 }
+
+    paper_records = get_cached_dblp_paper_data(conf_to_area, faculty_set)
+    citation_lookup = build_citation_lookup(paper_records)
+    latest_year = max(year_area_data.keys()) if year_area_data else 0
+
+    for record in paper_records:
+        year = record["year"]
+        area = record["area"]
+        conference = record["conference"]
+        doi = record.get("doi")
+        if not year or not area or not conference:
+            continue
+        year_str = str(year)
+        citations = int(citation_lookup.get(doi, 0)) if doi else 0
+        age = max(1, latest_year - year + 1)
+        age_adjusted = citations / age
+
+        if year_str in json_data["years"] and area in json_data["years"][year_str]:
+            json_data["years"][year_str][area]["citation_count"] += citations
+            json_data["years"][year_str][area]["age_adjusted_citation_count"] += age_adjusted
+
+        if (
+            year_str in json_data["years_by_conference"]
+            and conference in json_data["years_by_conference"][year_str]
+        ):
+            json_data["years_by_conference"][year_str][conference]["citation_count"] += citations
+            json_data["years_by_conference"][year_str][conference]["age_adjusted_citation_count"] += age_adjusted
+
+    for year_str in json_data["years"]:
+        for area in json_data["years"][year_str]:
+            val = json_data["years"][year_str][area]["age_adjusted_citation_count"]
+            json_data["years"][year_str][area]["age_adjusted_citation_count"] = round(val, 4)
+    for year_str in json_data["years_by_conference"]:
+        for conf in json_data["years_by_conference"][year_str]:
+            val = json_data["years_by_conference"][year_str][conf]["age_adjusted_citation_count"]
+            json_data["years_by_conference"][year_str][conf]["age_adjusted_citation_count"] = round(val, 4)
 
     json_data["available_conferences"] = sorted(conf_set)
     
