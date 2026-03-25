@@ -263,6 +263,8 @@ function computeICLRPoints(fromYear, toYear, baselineArea) {
     var checkedConferences = getCheckedConferences();
     var conferenceToArea = perYearData.conference_to_area || {};
     var aggregatedPublicationCountByArea = {};
+    var aggregatedCitationCountByArea = {};
+    var aggregatedAgeAdjustedCitationCountByArea = {};
     var aggregatedFacultySetsByArea = {};
     
     if (perYearData.years_by_conference) {
@@ -281,6 +283,10 @@ function computeICLRPoints(fromYear, toYear, baselineArea) {
                 
                 aggregatedPublicationCountByArea[area] =
                     (aggregatedPublicationCountByArea[area] || 0) + data.publication_count;
+                aggregatedCitationCountByArea[area] =
+                    (aggregatedCitationCountByArea[area] || 0) + (data.citation_count || 0);
+                aggregatedAgeAdjustedCitationCountByArea[area] =
+                    (aggregatedAgeAdjustedCitationCountByArea[area] || 0) + (data.age_adjusted_citation_count || 0);
                 if (!aggregatedFacultySetsByArea[area]) {
                     aggregatedFacultySetsByArea[area] = [];
                 }
@@ -307,6 +313,10 @@ function computeICLRPoints(fromYear, toYear, baselineArea) {
                 var data = yearData[area];
                 aggregatedPublicationCountByArea[area] =
                     (aggregatedPublicationCountByArea[area] || 0) + data.publication_count;
+                aggregatedCitationCountByArea[area] =
+                    (aggregatedCitationCountByArea[area] || 0) + (data.citation_count || 0);
+                aggregatedAgeAdjustedCitationCountByArea[area] =
+                    (aggregatedAgeAdjustedCitationCountByArea[area] || 0) + (data.age_adjusted_citation_count || 0);
                 if (!aggregatedFacultySetsByArea[area]) {
                     aggregatedFacultySetsByArea[area] = [];
                 }
@@ -325,12 +335,16 @@ function computeICLRPoints(fromYear, toYear, baselineArea) {
     var areaToFractionalFacultyCount = computeFractionalFaculty(aggregatedFacultySetsByArea);
     var baselineFractionalFacultyCount = areaToFractionalFacultyCount[baselineArea];
     var baselinePublicationCount = aggregatedPublicationCountByArea[baselineArea];
+    var baselineAgeAdjustedCitationCount = aggregatedAgeAdjustedCitationCountByArea[baselineArea] || 0;
     
     if (!baselineFractionalFacultyCount || !baselinePublicationCount || baselinePublicationCount === 0) {
         return [];
     }
     
     var baseline = baselineFractionalFacultyCount / baselinePublicationCount;
+    var baselineAgeAdjPerPub = baselinePublicationCount > 0 && baselineAgeAdjustedCitationCount > 0
+        ? baselineAgeAdjustedCitationCount / baselinePublicationCount
+        : 0;
     var results = [];
     var areas = Object.keys(aggregatedPublicationCountByArea).sort();
     
@@ -338,6 +352,7 @@ function computeICLRPoints(fromYear, toYear, baselineArea) {
         var area = areas[i];
         var publicationCount = aggregatedPublicationCountByArea[area];
         var fractionalFacultyCount = areaToFractionalFacultyCount[area] || 0;
+        var ageAdjustedCitationCount = aggregatedAgeAdjustedCitationCountByArea[area] || 0;
         
         if (publicationCount === 0) {
             continue;
@@ -345,14 +360,26 @@ function computeICLRPoints(fromYear, toYear, baselineArea) {
         
         var facultyPerPub = fractionalFacultyCount / publicationCount;
         var iclrPoints = facultyPerPub / baseline;
+        var impactPoints = 0;
+        if (baselineAgeAdjPerPub > 0 && publicationCount > 0) {
+            var ageAdjPerPub = ageAdjustedCitationCount / publicationCount;
+            impactPoints = ageAdjPerPub / baselineAgeAdjPerPub;
+        }
+        var combinedPoints = (iclrPoints > 0 && impactPoints > 0)
+            ? Math.sqrt(iclrPoints * impactPoints)
+            : 0;
         var parentArea = perYearData.area_to_parent[area];
         
         results.push({
             area: area,
             parent: parentArea,
             publication_count: publicationCount,
+            citation_count: aggregatedCitationCountByArea[area] || 0,
+            age_adjusted_citation_count: Math.round(ageAdjustedCitationCount * 100) / 100,
             faculty_count: Math.round(fractionalFacultyCount * 100) / 100,
-            iclr_points: Math.round(iclrPoints * 100) / 100
+            iclr_points: Math.round(iclrPoints * 100) / 100,
+            impact_points: Math.round(impactPoints * 100) / 100,
+            combined_points: Math.round(combinedPoints * 100) / 100
         });
     }
     
@@ -454,6 +481,8 @@ function computeConferenceICLRPoints(fromYear, toYear, baselineConference) {
 
     var checkedConferences = getCheckedConferences();
     var aggregatedPublicationCountByConf = {};
+    var aggregatedCitationCountByConf = {};
+    var aggregatedAgeAdjustedCitationCountByConf = {};
     var aggregatedFacultySetsByConf = {};
     var conferenceToArea = perYearData.conference_to_area || {};
 
@@ -469,6 +498,10 @@ function computeConferenceICLRPoints(fromYear, toYear, baselineConference) {
             var data = yearData[conf];
             aggregatedPublicationCountByConf[conf] =
                 (aggregatedPublicationCountByConf[conf] || 0) + data.publication_count;
+            aggregatedCitationCountByConf[conf] =
+                (aggregatedCitationCountByConf[conf] || 0) + (data.citation_count || 0);
+            aggregatedAgeAdjustedCitationCountByConf[conf] =
+                (aggregatedAgeAdjustedCitationCountByConf[conf] || 0) + (data.age_adjusted_citation_count || 0);
 
             if (!aggregatedFacultySetsByConf[conf]) {
                 aggregatedFacultySetsByConf[conf] = [];
@@ -492,12 +525,16 @@ function computeConferenceICLRPoints(fromYear, toYear, baselineConference) {
     var confToFractionalFacultyCount = computeFractionalFaculty(aggregatedFacultySetsByConf);
     var baselineFractionalFacultyCount = confToFractionalFacultyCount[baselineConference];
     var baselinePublicationCount = aggregatedPublicationCountByConf[baselineConference];
+    var baselineAgeAdjustedCitationCount = aggregatedAgeAdjustedCitationCountByConf[baselineConference] || 0;
 
     if (!baselineFractionalFacultyCount || !baselinePublicationCount || baselinePublicationCount === 0) {
         return [];
     }
 
     var baseline = baselineFractionalFacultyCount / baselinePublicationCount;
+    var baselineAgeAdjPerPub = baselinePublicationCount > 0 && baselineAgeAdjustedCitationCount > 0
+        ? baselineAgeAdjustedCitationCount / baselinePublicationCount
+        : 0;
     var results = [];
     var conferences = Object.keys(aggregatedPublicationCountByConf).sort();
 
@@ -505,10 +542,19 @@ function computeConferenceICLRPoints(fromYear, toYear, baselineConference) {
         var conf = conferences[i];
         var publicationCount = aggregatedPublicationCountByConf[conf];
         var fractionalFacultyCount = confToFractionalFacultyCount[conf] || 0;
+        var ageAdjustedCitationCount = aggregatedAgeAdjustedCitationCountByConf[conf] || 0;
         if (publicationCount === 0) continue;
 
         var facultyPerPub = fractionalFacultyCount / publicationCount;
         var iclrPoints = facultyPerPub / baseline;
+        var impactPoints = 0;
+        if (baselineAgeAdjPerPub > 0 && publicationCount > 0) {
+            var ageAdjPerPub = ageAdjustedCitationCount / publicationCount;
+            impactPoints = ageAdjPerPub / baselineAgeAdjPerPub;
+        }
+        var combinedPoints = (iclrPoints > 0 && impactPoints > 0)
+            ? Math.sqrt(iclrPoints * impactPoints)
+            : 0;
         var area = conferenceToArea[conf];
         var parentArea = area ? perYearData.area_to_parent[area] : null;
 
@@ -517,8 +563,12 @@ function computeConferenceICLRPoints(fromYear, toYear, baselineConference) {
             area: area,
             parent: parentArea,
             publication_count: publicationCount,
+            citation_count: aggregatedCitationCountByConf[conf] || 0,
+            age_adjusted_citation_count: Math.round(ageAdjustedCitationCount * 100) / 100,
             faculty_count: Math.round(fractionalFacultyCount * 100) / 100,
-            iclr_points: Math.round(iclrPoints * 100) / 100
+            iclr_points: Math.round(iclrPoints * 100) / 100,
+            impact_points: Math.round(impactPoints * 100) / 100,
+            combined_points: Math.round(combinedPoints * 100) / 100
         });
     }
 
