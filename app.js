@@ -1,6 +1,19 @@
 var perYearData = null;
 var BASELINE_CONFERENCE = "ICLR";
 var DEFAULT_BASELINE_AREA = "Machine learning";
+var DEFAULT_METRIC_MODE = "effort";
+
+function getMetricMode() {
+    var el = document.getElementById("metric-mode");
+    if (!el) return DEFAULT_METRIC_MODE;
+    return el.value || DEFAULT_METRIC_MODE;
+}
+
+function getMetricLabel(metricMode) {
+    if (metricMode === "impact") return "Impact";
+    if (metricMode === "combined") return "Combined";
+    return "Effort";
+}
 
 function getCheckedAreas() {
     var checked = {};
@@ -600,6 +613,7 @@ function getConferencePointsData(fromYear, toYear, baselineConference) {
 function updateChart(fromYear, toYear) {
     var conferenceView = isConferenceViewEnabled();
     var trendView = isTrendViewEnabled();
+    var metricMode = getMetricMode();
     var baselineSelect = document.getElementById("baseline-dropbox");
     var baselineConferenceSelect = document.getElementById("baseline-conference-dropbox");
     var trendToggleLabel = document.getElementById("trend-toggle-label");
@@ -666,7 +680,11 @@ function updateChart(fromYear, toYear) {
                         parent: r.parent,
                         publication_count: r.publication_count,
                         faculty_count: r.faculty_count,
-                        iclr_points: r.iclr_points
+                        citation_count: r.citation_count || 0,
+                        age_adjusted_citation_count: r.age_adjusted_citation_count || 0,
+                        iclr_points: r.iclr_points,
+                        impact_points: r.impact_points || 0,
+                        combined_points: r.combined_points || 0
                     };
                 });
             }
@@ -685,9 +703,21 @@ function updateChart(fromYear, toYear) {
             for(var i = rows.length - 1; i >= 0; i--) {
                 var row = rows[i];
                 areas.push(row.label);
-                values.push(row.iclr_points);
+                var value = row.iclr_points;
+                if (metricMode === "impact") value = row.impact_points || 0;
+                if (metricMode === "combined") value = row.combined_points || 0;
+                values.push(value);
                 parents.push(row.parent);
-                customdata.push([row.faculty_count, row.publication_count, row.area]);
+                customdata.push([
+                    row.faculty_count,
+                    row.publication_count,
+                    row.area,
+                    row.citation_count || 0,
+                    row.age_adjusted_citation_count || 0,
+                    row.iclr_points || 0,
+                    row.impact_points || 0,
+                    row.combined_points || 0
+                ]);
             };
     
     var colorMap = {
@@ -716,18 +746,30 @@ function updateChart(fromYear, toYear) {
 
     var hovertemplate;
     if (conferenceView) {
+        var metricLabel = getMetricLabel(metricMode);
         hovertemplate = '<b>%{y}</b><br>' +
             'Area: %{customdata[2]}<br>' +
             'Faculty: %{customdata[0]}<br>' +
             'Publications: %{customdata[1]}<br>' +
-            'Points: %{x:.2f}<br>' +
+            'Citations: %{customdata[3]}<br>' +
+            'Age-adjusted citations: %{customdata[4]:.2f}<br>' +
+            'Effort points: %{customdata[5]:.2f}<br>' +
+            'Impact points: %{customdata[6]:.2f}<br>' +
+            'Combined points: %{customdata[7]:.2f}<br>' +
+            metricLabel + ': %{x:.2f}<br>' +
             'Baseline: ' + baselineConference + '<br>' +
             '<extra></extra>';
     } else {
+        var metricLabel = getMetricLabel(metricMode);
         hovertemplate = '<b>%{y}</b><br>' +
             'Faculty: %{customdata[0]}<br>' +
             'Publications: %{customdata[1]}<br>' +
-            'ICLR Points: %{x:.2f}<br>' +
+            'Citations: %{customdata[3]}<br>' +
+            'Age-adjusted citations: %{customdata[4]:.2f}<br>' +
+            'Effort points: %{customdata[5]:.2f}<br>' +
+            'Impact points: %{customdata[6]:.2f}<br>' +
+            'Combined points: %{customdata[7]:.2f}<br>' +
+            metricLabel + ': %{x:.2f}<br>' +
             'Baseline: ' + baselineArea + '<br>' +
             '<extra></extra>';
     }
@@ -785,7 +827,7 @@ function updateChart(fromYear, toYear) {
         margin: { l: 230, r: 120, t: 50, b: 20 },
         bargap: conferenceView ? 0.35 : 0.2,
         title: {
-            text: (conferenceView ? baselineConference : baselineArea) + ' Points',
+            text: (conferenceView ? baselineConference : baselineArea) + ' ' + getMetricLabel(metricMode) + ' Points',
             font: {
                 size: 18,
                 color: '#2c3e50',
@@ -1085,6 +1127,14 @@ function setup(){
     var trendToggle = document.getElementById("trend-view-toggle");
     if (trendToggle) {
         trendToggle.addEventListener("change", function(){
+            var yrs = getYearsFromInput();
+            updateChart(yrs.from, yrs.to);
+        });
+    }
+
+    var metricModeSelect = document.getElementById("metric-mode");
+    if (metricModeSelect) {
+        metricModeSelect.addEventListener("change", function(){
             var yrs = getYearsFromInput();
             updateChart(yrs.from, yrs.to);
         });
