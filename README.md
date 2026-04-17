@@ -1,4 +1,4 @@
-# ICLR Points
+# CSConfs-Index
 
 Compares CS confs/areas based on publication efforts. Inspired bythe  [ICLRPoints work](https://iclrpoints.com/) ([arxiv](https://arxiv.org/abs/2503.16623). Uses [CSRankings](https://csrankings.org) and [DBLP](https://dblp.org); venues in `data/area.csv` (CSRankings + CORE A*).
 
