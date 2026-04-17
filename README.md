@@ -1,8 +1,13 @@
-# ICLR Points
+# csconfs-index
 
-Compares CS research areas by "ICLR points"—effort to publish one paper at a top ML venue (e.g. ICLR) vs. other areas. Uses [CSRankings](https://csrankings.org) and [DBLP](https://dblp.org); venues in `data/area.csv` (CSRankings + CORE A*).
+`csconfs-index` compares CS conferences/areas by publication effort using CSRankings + DBLP-style venue groupings.
 
-Revision of [iclrpoints.com](https://iclrpoints.com/).
+This project was inspired by the **ICLRPoints** work:
+- Website: https://iclrpoints.com/
+- Paper (arXiv): https://arxiv.org/abs/2503.16623
+
+Data sources used here include CSRankings and DBLP; venues are defined in `data/area.csv` (CSRankings + CORE A*).
+
 
 ---
 
@@ -18,8 +23,8 @@ Revision of [iclrpoints.com](https://iclrpoints.com/).
 ### 1. Clone
 
 ```bash
-git clone https://github.com/dynaroars/iclrpoints.git
-cd iclrpoints
+git clone https://github.com/dynaroars/csconfs-index.git
+cd csconfs-index
 ```
 
 ### 2. Install dependencies
@@ -71,7 +76,7 @@ Open [http://localhost:8000](http://localhost:8000).
 ## Project layout
 
 ```
-iclrpoints/
+csconfs-index/
 ├── index.html
 ├── app.js
 ├── styles.css
