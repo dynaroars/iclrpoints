@@ -1,6 +1,6 @@
 # ICLR Points
 
-Compares CS research areas by "ICLR points"—effort to publish one paper at a top ML venue (e.g. ICLR) vs. other areas. Inspired by [iclrpoints.com](https://iclrpoints.com/). Uses [CSRankings](https://csrankings.org) and [DBLP](https://dblp.org); venues in `data/area.csv` (CSRankings + CORE A*).
+Compares CS research areas by "ICLR points"—effort to publish one paper at a top ML venue (e.g. ICLR) vs. other areas. Inspired bythe  [ICLRPoints work](https://iclrpoints.com/) ([arxiv](https://arxiv.org/abs/2503.16623). Uses [CSRankings](https://csrankings.org) and [DBLP](https://dblp.org); venues in `data/area.csv` (CSRankings + CORE A*).
 
 
 ---
